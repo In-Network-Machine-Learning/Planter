@@ -1,4 +1,4 @@
-# Planter $\color{red}{The\ full\ artifact\ is\ attached\ in\ the\ HotCRP\ system}$
+# Planter 
 <!----><font style="color : Red">The full artifact is attached in the HotCRP system</font>
 ![Planter Logo](src/images/logo.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
