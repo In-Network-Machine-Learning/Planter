@@ -1,5 +1,5 @@
 # Planter 
-<!----><font style="color : Red">The full artifact is attached in the HotCRP system</font>
+<!----><font style="color : Red">Planter will appear in the next volume of CCR [[pdf](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)]. We expect a release in May/2025.</font>
 ![Planter Logo](src/images/logo.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![GitHub release](https://img.shields.io/badge/pre--release%20tag-v0.2.0-orange)
@@ -12,9 +12,7 @@ Planter is a modular framework for realising in one-click in-network machine lea
 
 ## Planter's Availability
 
-Planter is currently under a peer-review process. **_The source code will be made available once the peer-reviewed version is published_**. $\color{red}{The\ full\ artifact\ can\ be\ found\ in\ the\ HotCRP\ system.}$
-
-If you're interested in this work and find anything unclear in the ArXiv paper, please feel free to contact me at ```changgang.zheng@eng.ox.ac.uk```. **_We are welcoming collaborations._** It can be exciting to collaborate, if you think in-network machine learning is helpful to your research or use case. If there are any potential interests, please feel free to contact my supervisor ```noa.zilberman@eng.ox.ac.uk``` and me ```changgang.zheng@eng.ox.ac.uk```.
+Planter will appear in the next volume of CCR [[pdf](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)]. We expect a release in May/2025. Meanwhile, if you're interested in this work and find anything unclear in the ArXiv paper, please feel free to contact me at ```changgang.zheng@eng.ox.ac.uk```. **_We are welcoming collaborations._** It can be exciting to collaborate, if you think in-network machine learning is helpful to your research or use case. If there are any potential interests, please feel free to contact my supervisor ```noa.zilberman@eng.ox.ac.uk``` and me ```changgang.zheng@eng.ox.ac.uk```.
 
 ## License
 
@@ -22,6 +20,7 @@ The files are licensed under Apache License: [LICENSE](./LICENSE). The text of t
 
 ## Citation
 Please cite our Planter papers ([Planter](https://arxiv.org/pdf/2205.08824.pdf) and [Planter poster](https://dl.acm.org/doi/10.1145/3472716.3472846)):
+
 ```
 @article{zheng2022automating,
   title={Automating In-Network Machine Learning},
@@ -39,6 +38,7 @@ Please cite our Planter papers ([Planter](https://arxiv.org/pdf/2205.08824.pdf) 
 }
 ```
 We are also excited to introduce several Planter related or enabled papers ([IIsy](https://arxiv.org/pdf/2205.08243.pdf), [Linnet](https://changgang-zheng.github.io/Home-Page/papers/Linnet%20Limit%20Order%20Books%20Within%20Switches.pdf), and [P4Pir](https://changgang-zheng.github.io/Home-Page/papers/P4Pir%20In-Network%20Analysis%20for%20Smart%20IoT%20Gateways.pdf)): 
+
 ```
 @article{zheng2022iisy,
   title={IIsy: Practical In-Network Classification},
