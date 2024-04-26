@@ -1,5 +1,5 @@
 # Planter 
-<font style="color : Red">Planter will appear in the next volume of CCR [[pdf](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)]. We expect a release in May/2025.</font>
+<font style="color : Red">Planter will appear in the next volume of CCR [[pdf](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)]. We expect a release in May/2024.</font>
 ![Planter Logo](src/images/logo.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![GitHub release](https://img.shields.io/badge/pre--release%20tag-v0.2.0-orange)
@@ -12,7 +12,7 @@ Planter is a modular framework for realising in one-click in-network machine lea
 
 ## Planter's Availability
 
-Planter will appear in the next volume of CCR [[pdf](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)]. We expect a release in May/2025. Meanwhile, if you're interested in this work and find anything unclear in the ArXiv paper, please feel free to contact me at ```changgang.zheng@eng.ox.ac.uk```. **_We are welcoming collaborations._** It can be exciting to collaborate, if you think in-network machine learning is helpful to your research or use case. If there are any potential interests, please feel free to contact my supervisor ```noa.zilberman@eng.ox.ac.uk``` and me ```changgang.zheng@eng.ox.ac.uk```.
+Planter will appear in the next volume of CCR [[pdf](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)]. We expect a release in May/2024. Meanwhile, if you're interested in this work and find anything unclear in the ArXiv paper, please feel free to contact me at ```changgang.zheng@eng.ox.ac.uk```. **_We are welcoming collaborations._** It can be exciting to collaborate, if you think in-network machine learning is helpful to your research or use case. If there are any potential interests, please feel free to contact my supervisor ```noa.zilberman@eng.ox.ac.uk``` and me ```changgang.zheng@eng.ox.ac.uk```.
 
 ## License
 
