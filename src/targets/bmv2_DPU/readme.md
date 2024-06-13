@@ -1,0 +1,1 @@
+This folder contains Planter-supported P4 target modules for BMv2 DPU. ```run_model.py``` sets up the environment and ```test_model.py``` completes a test case. Please refer to ```./Docs/Planter_User_Document.pdf```for further information.  To install it, please follow to [link](https://docs.nvidia.com/networking/display/bluefielddpuosv460) for instructions.

@@ -1,0 +1,9 @@
+#
+# test-v4-drop
+#
+
+table_add filter NoAction 0 0xc0a87f02 =>
+table_add filter NoAction 0 0xc0a88002 =>
+
+run_traffic packets
+

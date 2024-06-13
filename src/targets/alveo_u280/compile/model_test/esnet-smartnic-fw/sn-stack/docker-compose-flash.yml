@@ -1,0 +1,39 @@
+x-labtools-service: &labtools-service
+  image: ${LABTOOLS_REGISTRY-}xilinx-labtools-docker:${LABTOOLS_TAG-v2022.1-latest}
+
+services:
+  smartnic-flash:
+    <<: *labtools-service
+    hostname: smartnic-flash
+    init: true
+    user: root
+    privileged: true
+    env_file:
+      - ${SN_STACK_ROOT-.}/buildinfo.env
+    volumes:
+      - ${SN_STACK_ROOT-${PWD}}/debs/focal:/debs:ro
+      - ${SN_STACK_ROOT-.}/smartnic-hw/scripts:/scripts:ro
+    network_mode: none
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        dpkg -i \
+          /debs/esnet-smartnic-hw_1.0.0-$${SN_FW_VER}_amd64.deb
+        /scripts/program_flash.sh \
+          localhost:3121 \
+          "${HW_TARGET_SERIAL:-*}" \
+          /usr/lib/firmware/esnet-smartnic/esnet-smartnic.mcs \
+          $FPGA_PCIE_DEV
+        if [ $$? ] ; then
+          # Flash update has succeeded, all OK
+          echo "Flash Update Successful"
+          exit 0
+        else
+          echo "Flash Update Attempted and Failed, Not Healthy!"
+          exit 1
+        fi

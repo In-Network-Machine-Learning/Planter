@@ -1,0 +1,8 @@
+tmp/
+esnet-smartnic1/
+esnet-smartnic-dev/
+files
+esnet-smartnic1.substvars
+esnet-smartnic-dev.substvars
+debhelper-build-stamp
+

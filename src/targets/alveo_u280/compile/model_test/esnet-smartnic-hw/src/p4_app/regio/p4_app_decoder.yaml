@@ -1,0 +1,11 @@
+name: p4_app
+
+blocks:
+  p4_app: &p4_app
+    !include ../src/p4_app/regio/p4_app.yaml
+
+interfaces:
+  - block: *p4_app
+    address: 0x0000
+    width: 12
+    name: p4_app

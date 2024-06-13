@@ -1,0 +1,7 @@
+usr/include/*
+usr/lib/*/lib*.so
+usr/lib/*/pkgconfig/*
+usr/share/esnet-smartnic-dev/**
+usr/bin/regio-elaborate
+usr/bin/regio-generate
+usr/bin/regio-info

@@ -1,0 +1,5 @@
+esnet-smartnic (1.0.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Stacey Sheldon <stac@es.net>  Thu, 08 Jul 2021 15:42:51 +0000

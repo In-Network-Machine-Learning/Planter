@@ -1,0 +1,281 @@
+include:
+  - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
+
+stages:
+  - p4_sim
+  - rtl_sim
+  - bitfile
+  - package
+  - trigger_downstream
+
+variables:
+  GIT_STRATEGY: clone
+  SEED: 0
+  RANDOMIZE_SEED: 0
+
+.common:
+  image: $CI_REGISTRY/ht/xilinx-tools-docker:33821-gbdb40b52
+  before_script:
+    - source /opt/Xilinx/Vivado/2022.1/settings64.sh
+    - if [ $RANDOMIZE_SEED -gt 0 ]; then export SEED=$RANDOM; fi
+    - echo "Running pipeline with SEED $SEED..."
+  variables:
+    XILINXD_LICENSE_FILE: "2100@dmv.es.net"
+    # Required to keep click python module happy
+    LC_ALL: C.UTF-8
+    LANG: C.UTF-8
+    GIT_SUBMODULE_STRATEGY: recursive
+
+p4bm:
+  stage: p4_sim
+  extends: .common
+  tags:
+    - ht-sim
+  script:
+    - make -C src/p4_app/p4/sim build sim-all
+    - make -C examples/p4_only/p4/sim sim-all
+    - make -C examples/p4_and_verilog/p4/sim build sim-all
+    - make -C examples/p4_hbm/p4/sim sim-all
+  artifacts:
+    name: "artifacts.$CI_PROJECT_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    paths:
+      - src/p4_app/p4/sim
+      - examples/p4_only/p4/sim
+      - examples/p4_hbm/p4/sim
+      - examples/p4_and_verilog/p4/sim
+  needs: []
+
+sim_p4_apps:
+  stage: rtl_sim
+  extends: .common
+  tags:
+    - ht-sim
+  script:
+    - make -C src/p4_app/tests/regression
+    - grep 'PASSED.*suites passing' src/p4_app/tests/regression/run_$SEED/sim.log
+    - make -C src/p4_app/tests.smartnic_322mhz/regression
+    - grep 'PASSED.*suites passing' src/p4_app/tests.smartnic_322mhz/regression/run_$SEED/sim.log
+    - make -C examples/p4_hbm/tests/regression
+    - grep 'PASSED.*suites passing' examples/p4_hbm/tests/regression/run_$SEED/sim.log
+    - make -C examples/p4_hbm/tests.smartnic_322mhz/regression
+    - grep 'PASSED.*suites passing' examples/p4_hbm/tests.smartnic_322mhz/regression/run_$SEED/sim.log
+    - make -C examples/p4_and_verilog/tests/regression
+    - grep 'PASSED.*suites passing' examples/p4_and_verilog/tests/regression/run_$SEED/sim.log
+  artifacts:
+    name: "artifacts.$CI_PROJECT_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    reports:
+      junit:
+        - src/p4_app/tests/regression/run_*/tests.xml
+        - src/p4_app/tests.smartnic_322mhz/regression/run_*/tests.xml
+        - examples/p4_hbm/tests/regression/run_*/tests.xml
+        - examples/p4_hbm/tests.smartnic_322mhz/regression/run_*/tests.xml
+        - examples/p4_and_verilog/tests/regression/run_*/tests.xml
+    when: always
+  timeout: 2h
+  needs: []
+
+sim_platform:
+  stage: rtl_sim
+  extends: .common
+  tags:
+    - ht-sim
+  script:
+    - make -C src/smartnic_322mhz/tests/regression
+    - grep 'PASSED.*suites passing' src/smartnic_322mhz/tests/regression/run_$SEED/sim.log
+    - make -C examples/p2p/tests.smartnic_322mhz/regression
+    - grep 'PASSED.*suites passing' examples/p2p/tests.smartnic_322mhz/regression/run_$SEED/sim.log
+  artifacts:
+    name: "artifacts.$CI_PROJECT_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    reports:
+      junit:
+        - src/smartnic_322mhz/tests/regression/run_*/tests.xml
+        - examples/p2p/tests.smartnic_322mhz/regression/run_*/tests.xml
+    when: always
+  timeout: 2h
+  needs: []
+
+.bitfile:
+  stage: bitfile
+  extends: .common
+  tags:
+    - ht-synth
+  script:
+    - |
+      cat <<_EOF >> bitfile.env
+      EXAMPLES_DIR=$EXAMPLES_DIR
+      SN_HW_APP_NAME=$SN_HW_APP_NAME
+      SN_HW_BOARD=$SN_HW_BOARD
+      _EOF
+    - cat bitfile.env
+    - make -C $EXAMPLES_DIR/$SN_HW_APP_NAME build BOARD=$SN_HW_BOARD BUILD_NAME=open-nic-ci
+  artifacts:
+    name: "artifacts.$CI_PROJECT_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    paths:
+      - src
+      - esnet-fpga-library
+      - examples
+      - open-nic-shell
+      - .out
+    exclude:
+      - .git/**
+      - .git
+      - .gitignore
+      - .gitlab-ci.yml
+      - .gitmodules
+    when: always
+    reports:
+      dotenv:
+        bitfile.env
+    expire_in: 2 weeks
+  timeout: 8h
+  needs: []
+  except:
+      - schedules
+
+build_p4_and_verilog:
+  extends: .bitfile
+  variables:
+    EXAMPLES_DIR: examples
+    SN_HW_APP_NAME: p4_and_verilog
+    SN_HW_BOARD: au55c
+
+build_p2p:
+  extends: .bitfile
+  variables:
+    EXAMPLES_DIR: examples
+    SN_HW_APP_NAME: p2p
+    SN_HW_BOARD: au250
+
+build_p4_only:
+  extends: .bitfile
+  variables:
+    EXAMPLES_DIR: examples
+    SN_HW_APP_NAME: p4_only
+    SN_HW_BOARD: au280
+
+build_p4_hbm:
+  extends: .bitfile
+  variables:
+    EXAMPLES_DIR: examples
+    SN_HW_APP_NAME: p4_hbm
+    SN_HW_BOARD: au280
+  allow_failure: true
+
+build_vanilla_ons:
+  stage: bitfile
+  extends: .common
+  tags:
+    - ht-synth
+  script:
+    - make -f makefile.esnet vanilla_bitfile
+  artifacts:
+    name: "artifacts.vanilla.$CI_PROJECT_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    paths:
+      - vanilla_artifact
+    exclude:
+      - .git/**
+      - .git
+      - .gitignore
+      - .gitlab-ci.yml
+      - .gitmodules
+    when: always
+    expire_in: 2 weeks
+  timeout: 8h
+  needs: []
+  rules:
+    - when: manual
+      allow_failure: true
+
+.hwapi:
+  stage: package
+  extends: .common
+  tags:
+    - ht-misc
+  before_script: []
+  script:
+    - echo "$EXAMPLES_DIR $SN_HW_APP_NAME $SN_HW_BOARD"
+    - unzip $EXAMPLES_DIR/$SN_HW_APP_NAME/artifacts/open-nic-ci/artifacts.$SN_HW_BOARD.open-nic-ci.0.zip
+    - |
+      cat <<_EOF >> hwapi.env
+      SN_HW_HWAPI_JOB_NUMBER=$CI_JOB_ID
+      SN_HW_APP_NAME=$SN_HW_APP_NAME
+      SN_HW_BOARD=$SN_HW_BOARD
+      _EOF
+    - cat hwapi.env
+  artifacts:
+    name: "artifacts.$SN_HW_BOARD.$SN_HW_APP_NAME.$CI_PIPELINE_ID"
+    paths:
+      - esnet-smartnic-hwapi
+    when: always
+    expire_in: 3 month
+    reports:
+      dotenv:
+        hwapi.env
+  timeout: 30m
+
+hwapi_p4_and_verilog:
+  extends: .hwapi
+  needs:
+    - build_p4_and_verilog
+
+hwapi_p2p:
+  extends: .hwapi
+  needs:
+    - build_p2p
+
+hwapi_p4_only:
+  extends: .hwapi
+  needs:
+    - build_p4_only
+
+hwapi_p4_hbm:
+  extends: .hwapi
+  needs:
+    - build_p4_hbm
+  allow_failure: true
+
+.trigger_fw:
+  stage: trigger_downstream
+  variables:
+    SN_HW_GROUP: $CI_PROJECT_NAMESPACE
+    SN_HW_REPO: $CI_PROJECT_NAME
+    SN_HW_BRANCH: $CI_COMMIT_BRANCH
+    SN_HW_APP_NAME: $SN_HW_APP_NAME
+    SN_HW_BOARD: $SN_HW_BOARD
+    # override the artifact URL in the triggered repo so it pulls directly from the hwapi job from this pipeline
+    ESNET_SMARTNIC_HWAPI_URL: "$CI_PROJECT_URL/-/jobs/$SN_HW_HWAPI_JOB_NUMBER/artifacts/download?file_type=archive"
+  trigger:
+    project: ht/esnet-smartnic-fw
+    branch: main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: true
+
+fw_p4_and_verilog:
+  extends: .trigger_fw
+  variables:
+    SN_HW_API_JOB: hwapi_p4_and_verilog
+  needs:
+    - hwapi_p4_and_verilog
+
+fw_p4_only:
+  extends: .trigger_fw
+  variables:
+    SN_HW_API_JOB: hwapi_p4_only
+  needs:
+    - hwapi_p4_only
+
+fw_p4_hbm:
+  extends: .trigger_fw
+  variables:
+    SN_HW_API_JOB: hwapi_p4_hbm
+  needs:
+    - hwapi_p4_hbm
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      allow_failure: true
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      when: manual
+      allow_failure: true

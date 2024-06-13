@@ -1,0 +1,797 @@
+{
+  "program" : "../DT_standard_classification_Iris.p4",
+  "__meta__" : {
+    "version" : [1, 1],
+    "compiler" : "p4c-vitisnet"
+  },
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "is_struct" : false,
+      "fields" : [
+        ["code_f0", 10, false],
+        ["code_f1", 10, false],
+        ["code_f2", 10, false],
+        ["code_f3", 10, false],
+        ["tmp", 48, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata_t",
+      "id" : 1,
+      "is_struct" : true,
+      "fields" : [
+        ["drop", 1, false],
+        ["ingress_timestamp", 64, false],
+        ["parsed_bytes", 16, false],
+        ["parser_error", 3, false],
+        ["_padding", 4, false]
+      ]
+    },
+    {
+      "name" : "ethernet_h",
+      "id" : 2,
+      "is_struct" : false,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "Planter_prefix_h",
+      "id" : 3,
+      "is_struct" : false,
+      "fields" : [
+        ["p", 8, false],
+        ["four", 8, false],
+        ["ver", 8, false],
+        ["typ", 8, false]
+      ]
+    },
+    {
+      "name" : "Planter_h",
+      "id" : 4,
+      "is_struct" : false,
+      "fields" : [
+        ["feature0", 32, false],
+        ["feature1", 32, false],
+        ["feature2", 32, false],
+        ["feature3", 32, false],
+        ["result", 32, false]
+      ]
+    },
+    {
+      "name" : "metadata_t",
+      "id" : 5,
+      "is_struct" : true,
+      "fields" : [
+        ["timestamp_ns", 64, false],
+        ["pid", 16, false],
+        ["ingress_port", 3, false],
+        ["egress_port", 3, false],
+        ["truncate_enable", 1, false],
+        ["truncate_length", 16, false],
+        ["rss_enable", 1, false],
+        ["rss_entropy", 12, false],
+        ["drop_reason", 4, false],
+        ["scratch", 32, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata_t",
+      "id" : 1,
+      "header_type" : "standard_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "Planter_prefix",
+      "id" : 3,
+      "header_type" : "Planter_prefix_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "Planter",
+      "id" : 4,
+      "header_type" : "Planter_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "metadata_t",
+      "id" : 5,
+      "header_type" : "metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [],
+  "errors" : [
+    ["NoError", 0],
+    ["PacketTooShort", 1],
+    ["NoMatch", 2],
+    ["StackOutOfBounds", 3],
+    ["HeaderTooShort", 4],
+    ["ParserTimeout", 5],
+    ["HeaderDepthLimitExceeded", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "start",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x1234",
+              "mask" : null,
+              "next_state" : "check_planter_version"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "check_planter_version",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "Planter_prefix"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x503401",
+              "mask" : null,
+              "next_state" : "parse_planter"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["Planter_prefix", "p"]
+            },
+            {
+              "type" : "field",
+              "value" : ["Planter_prefix", "four"]
+            },
+            {
+              "type" : "field",
+              "value" : ["Planter_prefix", "ver"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_planter",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "Planter"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        }
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "../DT_standard_classification_Iris.p4",
+        "line" : 153,
+        "column" : 8,
+        "source_fragment" : "SwitchDeparser"
+      },
+      "start" : "node_10",
+      "emits" : [
+        {
+          "name" : "node_10",
+          "id" : 0,
+          "sequence_point" : true,
+          "header" : "ethernet",
+          "next" : "node_11"
+        },
+        {
+          "name" : "node_11",
+          "id" : 1,
+          "sequence_point" : true,
+          "header" : "Planter_prefix",
+          "next" : "node_12"
+        },
+        {
+          "name" : "node_12",
+          "id" : 2,
+          "sequence_point" : true,
+          "header" : "Planter",
+          "next" : null
+        }
+      ],
+      "conditionals" : []
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [],
+  "register_arrays" : [],
+  "calculations" : [],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature0",
+      "id" : 5,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 10
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f0"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 183,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature1",
+      "id" : 6,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 10
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f1"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 187,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature2",
+      "id" : 7,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 10
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f2"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 191,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature3",
+      "id" : 8,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 10
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f3"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 195,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_lable",
+      "id" : 9,
+      "runtime_data" : [
+        {
+          "name" : "label",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["Planter", "result"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 199,
+            "column" : 8,
+            "source_fragment" : "hdr.Planter.result = label"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act",
+      "id" : 10,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 261,
+            "column" : 8,
+            "source_fragment" : "tmp = hdr.ethernet.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 262,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = hdr.ethernet.srcAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 263,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.srcAddr = tmp"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "../DT_standard_classification_Iris.p4",
+        "line" : 167,
+        "column" : 8,
+        "source_fragment" : "SwitchProcessing"
+      },
+      "init_table" : "SwitchProcessing.lookup_feature0",
+      "tables" : [
+        {
+          "name" : "SwitchProcessing.lookup_feature0",
+          "id" : 0,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 202,
+            "column" : 10,
+            "source_fragment" : "lookup_feature0"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Planter.feature0",
+              "target" : ["Planter", "feature0"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 80,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [5, 0],
+          "actions" : ["SwitchProcessing.extract_feature0", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature1",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature0" : "SwitchProcessing.lookup_feature1",
+            "NoAction" : "SwitchProcessing.lookup_feature1"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature1",
+          "id" : 1,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 212,
+            "column" : 10,
+            "source_fragment" : "lookup_feature1"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Planter.feature1",
+              "target" : ["Planter", "feature1"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 45,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [6, 1],
+          "actions" : ["SwitchProcessing.extract_feature1", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature2",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature1" : "SwitchProcessing.lookup_feature2",
+            "NoAction" : "SwitchProcessing.lookup_feature2"
+          },
+          "default_entry" : {
+            "action_id" : 1,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature2",
+          "id" : 2,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 222,
+            "column" : 10,
+            "source_fragment" : "lookup_feature2"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Planter.feature2",
+              "target" : ["Planter", "feature2"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 70,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7, 2],
+          "actions" : ["SwitchProcessing.extract_feature2", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature3",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature2" : "SwitchProcessing.lookup_feature3",
+            "NoAction" : "SwitchProcessing.lookup_feature3"
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature3",
+          "id" : 3,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 232,
+            "column" : 10,
+            "source_fragment" : "lookup_feature3"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Planter.feature3",
+              "target" : ["Planter", "feature3"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 26,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [8, 3],
+          "actions" : ["SwitchProcessing.extract_feature3", "NoAction"],
+          "base_default_next" : "SwitchProcessing.decision",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature3" : "SwitchProcessing.decision",
+            "NoAction" : "SwitchProcessing.decision"
+          },
+          "default_entry" : {
+            "action_id" : 3,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.decision",
+          "id" : 4,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../DT_standard_classification_Iris.p4",
+            "line" : 242,
+            "column" : 10,
+            "source_fragment" : "decision"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "code_f0",
+              "target" : ["scalars", "code_f0"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "code_f1",
+              "target" : ["scalars", "code_f1"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "code_f2",
+              "target" : ["scalars", "code_f2"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "code_f3",
+              "target" : ["scalars", "code_f3"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 24,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [9, 4],
+          "actions" : ["SwitchProcessing.read_lable", "NoAction"],
+          "base_default_next" : "tbl_act",
+          "next_tables" : {
+            "SwitchProcessing.read_lable" : "tbl_act",
+            "NoAction" : "tbl_act"
+          },
+          "default_entry" : {
+            "action_id" : 4,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act",
+          "id" : 5,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10],
+          "actions" : ["act"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "act" : null
+          },
+          "default_entry" : {
+            "action_id" : 10,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : []
+    }
+  ],
+  "checksums" : [],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : []
+}

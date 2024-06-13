@@ -1,0 +1,258 @@
+x-labtools-service: &labtools-service
+  image: ${LABTOOLS_REGISTRY-}xilinx-labtools-docker:${LABTOOLS_TAG-v2022.1-latest}
+  restart: unless-stopped
+
+x-smartnic-dpdk-service: &smartnic-dpdk-service
+  image: ${SMARTNIC_DPDK_REGISTRY-}smartnic-dpdk-docker:${SMARTNIC_DPDK_TAG-$USER-dev}
+  restart: unless-stopped
+
+services:
+  xilinx-hwserver:
+    <<: *labtools-service
+    hostname: xilinx-hwswerver
+    init: true
+    user: root
+    privileged: true
+    ports:
+      - "${HW_SERVER_PORT-3121}:3121"
+    volumes:
+      - /dev:/dev
+      - /sys/bus/usb:/sys/bus/usb
+    healthcheck:
+      test: ["CMD", "/bin/bash", "-c", "-e", "-o", "pipefail", "netstat -nlt | fgrep '0.0.0.0:3121'"]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 3s
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        /opt/Xilinx/Vivado_Lab/$${VIVADO_VERSION}/bin/hw_server \
+          -S \
+          -s \
+          tcp::3121 \
+          -e "set auto-open-ports 0" \
+          -e "set jtag-port-filter ${HW_TARGET_SERIAL:-Xilinx/}"
+
+  smartnic-hw:
+    <<: *labtools-service
+    hostname: smartnic-hw
+    depends_on:
+      xilinx-hwserver:
+        condition: service_healthy
+    init: true
+    user: root
+    privileged: true
+    env_file:
+      - ${SN_STACK_ROOT-.}/buildinfo.env
+    tmpfs:
+      - /status
+    volumes:
+      - debs:/debs:ro
+      - ${SN_STACK_ROOT-.}/smartnic-hw/scripts:/scripts:ro
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/bin/test -e /status/ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 10s
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        dpkg -i \
+          /debs/esnet-smartnic-hw_1.0.0-$${SN_FW_VER}_amd64.deb
+        /scripts/program_card.sh \
+          xilinx-hwserver:3121 \
+          "${HW_TARGET_SERIAL:-*}" \
+          /usr/lib/firmware/esnet-smartnic/esnet-smartnic.bit \
+          $FPGA_PCIE_DEV \
+          # FORCE
+        if [ $$? ] ; then
+          touch /status/ok
+          sleep infinity
+        fi
+
+  smartnic-devbind:
+    <<: *smartnic-dpdk-service
+    hostname: smartnic-devbind
+    depends_on:
+      smartnic-hw:
+        condition: service_healthy
+    init: true
+    user: root
+    privileged: true
+    env_file:
+      - ${SN_STACK_ROOT-.}/buildinfo.env
+    environment:
+      - FPGA_PCIE_DEV=$FPGA_PCIE_DEV
+    tmpfs:
+      - /status
+    volumes:
+      - /sys/bus/pci:/sys/bus/pci
+      - /sys/bus/pci/drivers:/sys/bus/pci/drivers
+      - /dev:/dev
+      - /lib/modules:/lib/modules
+    healthcheck:
+      test: ["CMD-SHELL", "/usr/bin/test -e /status/ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 6
+      start_period: 5s
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        echo 1 > /sys/bus/pci/rescan
+        sleep 1
+        # Bind the vfio-pci driver to each FPGA PF
+        dpdk-devbind.py -b vfio-pci $$FPGA_PCIE_DEV.0 $$FPGA_PCIE_DEV.1
+        # Confirm that the driver is properly bound to each FPGA PF
+        # Note the <TAB> before vfio-pci in the grep command
+        lspci -D -kvm -s $$FPGA_PCIE_DEV.0 | grep '^Driver:	vfio-pci'
+        lspci -D -kvm -s $$FPGA_PCIE_DEV.1 | grep '^Driver:	vfio-pci'
+        touch /status/ok
+        sleep infinity
+    profiles:
+      - smartnic-dpdk
+
+  smartnic-dpdk:
+    hostname: smartnic-dpdk
+    <<: *smartnic-dpdk-service
+    init: true
+    user: root
+    privileged: true
+    depends_on:
+      smartnic-devbind:
+        condition: service_healthy
+    env_file:
+      - ${SN_STACK_ROOT-.}/buildinfo.env
+    environment:
+      - SN_PCIE_DEV=$FPGA_PCIE_DEV
+    volumes:
+      - /sys/bus/pci:/sys/bus/pci
+      - /var/run/dpdk:/var/run/dpdk
+      - /sys/devices/system/node:/sys/devices/system/node
+      - /sys/bus/pci/drivers:/sys/bus/pci/drivers
+      - /dev:/dev
+      - /sys/kernel/mm/hugepages:/sys/kernel/mm/hugepages
+      - /lib/modules:/lib/modules
+      - sn-scratch:/scratch
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        dpdk-devbind.py --status
+        sleep infinity
+    profiles:
+      - smartnic-dpdk
+
+  smartnic-fw:
+    hostname: smartnic-fw
+    build:
+      context: ${SN_STACK_ROOT-.}/smartnic-fw
+      args:
+        DOCKERHUB_PROXY: ${DOCKERHUB_PROXY-}
+    depends_on:
+      smartnic-hw:
+        condition: service_healthy
+    init: true
+    user: root
+    privileged: true
+    restart: unless-stopped
+    env_file:
+      - ${SN_STACK_ROOT-.}/buildinfo.env
+    environment:
+      - REGIO_SELECT=$FPGA_PCIE_DEV.0
+      - SN_CLI_SLOTADDR=$FPGA_PCIE_DEV.0
+      - SN_P4_CLI_SERVER=smartnic-p4
+    volumes:
+      - debs:/debs:ro
+      - /sys/bus/pci:/sys/bus/pci
+      - /dev:/dev
+      - sn-scratch:/scratch
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        dpkg -i \
+          /debs/esnet-smartnic1_1.0.0-$${SN_FW_VER}_amd64.deb \
+          /debs/esnet-smartnic1-dbgsym_1.0.0-$${SN_FW_VER}_amd64.ddeb \
+          /debs/esnet-smartnic-dev_1.0.0-$${SN_FW_VER}_amd64.deb
+        setpci -s $FPGA_PCIE_DEV.0 COMMAND=0x2
+        setpci -s $FPGA_PCIE_DEV.1 COMMAND=0x2
+        sleep infinity
+
+  smartnic-p4:
+    hostname: smartnic-p4
+    build:
+      context: ${SN_STACK_ROOT-.}/smartnic-fw
+      args:
+        DOCKERHUB_PROXY: ${DOCKERHUB_PROXY-}
+    depends_on:
+      smartnic-hw:
+        condition: service_healthy
+    init: true
+    user: root
+    privileged: true
+    restart: unless-stopped
+    env_file:
+      - ${SN_STACK_ROOT-.}/buildinfo.env
+    environment:
+      - REGIO_SELECT=$FPGA_PCIE_DEV.0
+      - SN_CLI_SLOTADDR=$FPGA_PCIE_DEV.0
+      - SN_P4_AGENT_SLOTADDR=$FPGA_PCIE_DEV.0
+    volumes:
+      - debs:/debs:ro
+      - /sys/bus/pci:/sys/bus/pci
+      - /dev:/dev
+      - sn-scratch:/scratch
+      ## [debug] Uncomment the next line to include the source code in your container to debug with gdb
+      #- ${PWD}/..:/source
+    entrypoint:
+      - /bin/bash
+      - -c
+      - -e
+      - -o
+      - pipefail
+      - -x
+      - |
+        dpkg -i \
+          /debs/esnet-smartnic1_1.0.0-$${SN_FW_VER}_amd64.deb \
+          /debs/esnet-smartnic1-dbgsym_1.0.0-$${SN_FW_VER}_amd64.ddeb \
+          /debs/esnet-smartnic-dev_1.0.0-$${SN_FW_VER}_amd64.deb
+        sn-p4-agent $$SN_P4_AGENT_SLOTADDR
+
+volumes:
+  debs:
+    driver_opts:
+      type: none
+      device: ${SN_STACK_ROOT-${PWD}}/debs/focal
+      o: bind,ro
+
+  sn-scratch:
+    driver_opts:
+      type: none
+      device: ${SN_STACK_ROOT-${PWD}}/scratch
+      o: bind

@@ -1,0 +1,23 @@
+name: smartnic_322mhz_app_sdnet
+
+blocks:
+  sdnet: &sdnet
+    name: sdnet
+    info: |
+      This block contains the registers for the xilinx sdnet IP.
+      The memory offsets into this block are unmanaged by this tool.
+    regs: []
+
+decoders:
+  smartnic_322mhz_app_decoder: &smartnic_322mhz_app_decoder
+    !include ../src/smartnic_322mhz/regio/smartnic_322mhz_app_decoder.yaml
+
+interfaces:
+  - decoder: *smartnic_322mhz_app_decoder
+    address: 0x00000
+    width: 18
+    name: app
+  - block: *sdnet
+    address: 0x40000
+    width: 18
+    name: sdnet

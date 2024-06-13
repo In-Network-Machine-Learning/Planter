@@ -1,0 +1,178 @@
+name: smartnic_322mhz
+
+blocks:
+  smartnic_322mhz: &smartnic_322mhz
+    !include ../src/smartnic_322mhz/regio/smartnic_322mhz.yaml
+  reg_endian_check: &reg_endian_check
+    !include src/reg/endian/regio/reg_endian_check.yaml
+  axi4s_probe: &axi4s_probe
+    !include src/axi4s/regio/axi4s_probe.yaml 
+
+decoders:
+  smartnic_322mhz_app_decoder: &smartnic_322mhz_app_decoder
+    !include ../src/smartnic_322mhz/regio/smartnic_322mhz_app_sdnet_decoder.yaml
+  fifo: &fifo
+    !include src/fifo/regio/fifo_core_decoder.yaml
+  axi4s_split_join_decoder: &axi4s_split_join_decoder
+    !include src/axi4s/regio/axi4s_split_join_decoder.yaml
+  xilinx_hbm_0: &xilinx_hbm_0
+    !include ../src/smartnic_322mhz/regio/xilinx_hbm_0_decoder.yaml
+  xilinx_hbm_1: &xilinx_hbm_1
+    !include ../src/smartnic_322mhz/regio/xilinx_hbm_1_decoder.yaml
+
+interfaces:
+  - block: *smartnic_322mhz
+    address: 0x00000
+    width: 10
+    name: smartnic_322mhz_regs
+
+  - block: *reg_endian_check
+    address: 0x00400
+    width: 10
+    name: endian_check
+
+
+  - block: *axi4s_probe
+    address: 0x08000
+    width: 10
+    name: probe_from_cmac_0
+
+  - block: *axi4s_probe
+    address: 0x08400
+    width: 10
+    name: drops_ovfl_from_cmac_0
+
+  - block: *axi4s_probe
+    address: 0x08800
+    width: 10
+    name: drops_err_from_cmac_0
+
+  - block: *axi4s_probe
+    address: 0x08c00
+    width: 10
+    name: probe_from_cmac_1
+
+  - block: *axi4s_probe
+    address: 0x09000
+    width: 10
+    name: drops_ovfl_from_cmac_1
+
+  - block: *axi4s_probe
+    address: 0x09400
+    width: 10
+    name: drops_err_from_cmac_1
+
+  - block: *axi4s_probe
+    address: 0x09800
+    width: 10
+    name: probe_from_host_0
+
+  - block: *axi4s_probe
+    address: 0x09c00
+    width: 10
+    name: probe_from_host_1
+
+  - block: *axi4s_probe
+    address: 0x0a000
+    width: 10
+    name: probe_core_to_app0
+
+  - block: *axi4s_probe
+    address: 0x0a400
+    width: 10
+    name: probe_core_to_app1
+
+  - block: *axi4s_probe
+    address: 0x0a800
+    width: 10
+    name: probe_app0_to_core
+
+  - block: *axi4s_probe
+    address: 0x0ac00
+    width: 10
+    name: probe_app1_to_core
+
+  - block: *axi4s_probe
+    address: 0x0b000
+    width: 10
+    name: probe_to_cmac_0
+
+  - block: *axi4s_probe
+    address: 0x0b400
+    width: 10
+    name: drops_ovfl_to_cmac_0
+
+  - block: *axi4s_probe
+    address: 0x0b800
+    width: 10
+    name: probe_to_cmac_1
+
+  - block: *axi4s_probe
+    address: 0x0bc00
+    width: 10
+    name: drops_ovfl_to_cmac_1
+
+  - block: *axi4s_probe
+    address: 0x0c000
+    width: 10
+    name: probe_to_host_0
+
+  - block: *axi4s_probe
+    address: 0x0c400
+    width: 10
+    name: drops_ovfl_to_host_0
+
+  - block: *axi4s_probe
+    address: 0x0c800
+    width: 10
+    name: probe_to_host_1
+
+  - block: *axi4s_probe
+    address: 0x0cc00
+    width: 10
+    name: drops_ovfl_to_host_1
+
+  - block: *axi4s_probe
+    address: 0x0d000
+    width: 10
+    name: probe_to_bypass
+
+  - block: *axi4s_probe
+    address: 0x0d400
+    width: 10
+    name: drops_from_igr_sw
+
+  - block: *axi4s_probe
+    address: 0x0d800
+    width: 10
+    name: drops_from_bypass
+
+  - block: *axi4s_probe
+    address: 0x0dc00
+    width: 10
+    name: drops_from_app0
+
+  - decoder: *fifo
+    address: 0x0e000
+    width: 10
+    name: fifo_to_host_0
+
+  - decoder: *axi4s_split_join_decoder
+    address: 0x0e400
+    width: 10
+    name: axi4s_split_join
+
+  - decoder: *xilinx_hbm_0
+    address: 0x10000
+    width: 12
+    name: hbm_0
+
+  - decoder: *xilinx_hbm_1
+    address: 0x11000
+    width: 12
+    name: hbm_1
+
+  - decoder: *smartnic_322mhz_app_decoder
+    address: 0x80000
+    width: 19
+    name: smartnic_322mhz_app

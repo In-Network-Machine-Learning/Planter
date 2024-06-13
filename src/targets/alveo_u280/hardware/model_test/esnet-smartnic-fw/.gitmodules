@@ -1,0 +1,3 @@
+[submodule "regio"]
+	path = regio
+	url = ../regio

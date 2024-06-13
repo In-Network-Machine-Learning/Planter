@@ -1,0 +1,4 @@
+[wrap-file]
+source_filename = esnet-smartnic-hwapi.zip
+patch_directory = esnet-smartnic-hwapi.overlay
+

@@ -1,0 +1,57 @@
+table_add SwitchIngress.lookup_feature0 extract_feature0 64&&&192 => 0 0
+table_add SwitchIngress.lookup_feature0 extract_feature0 32&&&224 => 0 1
+table_add SwitchIngress.lookup_feature0 extract_feature0 16&&&240 => 0 2
+table_add SwitchIngress.lookup_feature0 extract_feature0 8&&&248 => 0 3
+table_add SwitchIngress.lookup_feature0 extract_feature0 4&&&252 => 0 4
+table_add SwitchIngress.lookup_feature0 extract_feature0 2&&&254 => 0 5
+table_add SwitchIngress.lookup_feature0 extract_feature0 1&&&255 => 0 6
+table_add SwitchIngress.lookup_feature0 extract_feature0 0&&&255 => 0 7
+
+table_add SwitchIngress.lookup_feature1 extract_feature1 32&&&96 => 1 0
+table_add SwitchIngress.lookup_feature1 extract_feature1 16&&&112 => 0 1
+table_add SwitchIngress.lookup_feature1 extract_feature1 8&&&120 => 0 2
+table_add SwitchIngress.lookup_feature1 extract_feature1 4&&&124 => 0 3
+table_add SwitchIngress.lookup_feature1 extract_feature1 2&&&126 => 0 4
+table_add SwitchIngress.lookup_feature1 extract_feature1 1&&&127 => 0 5
+table_add SwitchIngress.lookup_feature1 extract_feature1 0&&&127 => 0 6
+
+table_add SwitchIngress.lookup_feature2 extract_feature2 64&&&192 => 3 0
+table_add SwitchIngress.lookup_feature2 extract_feature2 56&&&248 => 3 1
+table_add SwitchIngress.lookup_feature2 extract_feature2 52&&&252 => 3 2
+table_add SwitchIngress.lookup_feature2 extract_feature2 50&&&254 => 3 3
+table_add SwitchIngress.lookup_feature2 extract_feature2 49&&&255 => 2 4
+table_add SwitchIngress.lookup_feature2 extract_feature2 32&&&224 => 1 5
+table_add SwitchIngress.lookup_feature2 extract_feature2 28&&&252 => 1 6
+table_add SwitchIngress.lookup_feature2 extract_feature2 26&&&254 => 1 7
+table_add SwitchIngress.lookup_feature2 extract_feature2 25&&&255 => 1 8
+table_add SwitchIngress.lookup_feature2 extract_feature2 16&&&240 => 0 9
+table_add SwitchIngress.lookup_feature2 extract_feature2 8&&&248 => 0 10
+table_add SwitchIngress.lookup_feature2 extract_feature2 4&&&252 => 0 11
+table_add SwitchIngress.lookup_feature2 extract_feature2 2&&&254 => 0 12
+table_add SwitchIngress.lookup_feature2 extract_feature2 1&&&255 => 0 13
+table_add SwitchIngress.lookup_feature2 extract_feature2 0&&&255 => 0 14
+
+table_add SwitchIngress.lookup_feature3 extract_feature3 24&&&56 => 2 0
+table_add SwitchIngress.lookup_feature3 extract_feature3 20&&&60 => 2 1
+table_add SwitchIngress.lookup_feature3 extract_feature3 18&&&62 => 2 2
+table_add SwitchIngress.lookup_feature3 extract_feature3 17&&&63 => 2 3
+table_add SwitchIngress.lookup_feature3 extract_feature3 16&&&48 => 1 4
+table_add SwitchIngress.lookup_feature3 extract_feature3 8&&&56 => 0 5
+table_add SwitchIngress.lookup_feature3 extract_feature3 4&&&60 => 0 6
+table_add SwitchIngress.lookup_feature3 extract_feature3 2&&&62 => 0 7
+table_add SwitchIngress.lookup_feature3 extract_feature3 1&&&63 => 0 8
+table_add SwitchIngress.lookup_feature3 extract_feature3 0&&&63 => 0 9
+
+table_add SwitchIngress.decision read_lable 0 0 0 0 => 0
+table_add SwitchIngress.decision read_lable 0 0 0 1 => 0
+table_add SwitchIngress.decision read_lable 0 0 0 2 => 0
+table_add SwitchIngress.decision read_lable 0 1 0 0 => 0
+table_add SwitchIngress.decision read_lable 0 1 0 1 => 0
+table_add SwitchIngress.decision read_lable 0 1 0 2 => 0
+table_add SwitchIngress.decision read_lable 0 0 3 0 => 2
+table_add SwitchIngress.decision read_lable 0 1 3 0 => 2
+table_add SwitchIngress.decision read_lable 0 0 2 2 => 2
+table_add SwitchIngress.decision read_lable 0 0 3 2 => 2
+table_add SwitchIngress.decision read_lable 0 1 2 2 => 2
+table_add SwitchIngress.decision read_lable 0 1 3 2 => 2
+table_add SwitchIngress.decision read_lable 0 0 1 2 => 2

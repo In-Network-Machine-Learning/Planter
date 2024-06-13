@@ -1,0 +1,1 @@
+This folder contains Planter-supported spectrum architecture module [Link](https://opennetworking.org/wp-content/uploads/2020/04/Itzik-Ashkenazi-Slide-Deck.pdf). Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

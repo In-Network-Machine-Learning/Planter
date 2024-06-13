@@ -1,0 +1,1 @@
+This folder contains all input raw data for Planter. It can be moved to other directories. Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

@@ -1,0 +1,26 @@
+struct standard_metadata_t {
+    // For more details see docs/simple_switch.md
+    // in https://github.com/p4lang/behavioral-model
+
+    // Should only read, ingress or egress
+    bit<9>  ingress_port;
+    bit<32> instance_type;
+    bit<32> packet_length;
+    bit<48> ingress_global_timestamp;
+    bit<1>  checksum_error;
+    error   parser_error;
+
+    // In ingress, read or write.
+    // In egress, should only read.
+    bit<9>  egress_spec;
+    bit<16> mcast_grp;
+
+    // Should only read, only in egress
+    bit<9>  egress_port;
+    bit<16> egress_rid;
+    bit<48> egress_global_timestamp;
+    bit<32> enq_timestamp;
+    bit<19> enq_qdepth;
+    bit<32> deq_timedelta;
+    bit<19> deq_qdepth;
+}

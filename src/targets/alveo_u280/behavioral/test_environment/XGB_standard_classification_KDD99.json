@@ -1,0 +1,3632 @@
+{
+  "program" : "../XGB_standard_classification_KDD99.p4",
+  "__meta__" : {
+    "version" : [1, 1],
+    "compiler" : "p4c-vitisnet"
+  },
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "is_struct" : false,
+      "fields" : [
+        ["code_f0", 20, false],
+        ["code_f1", 16, false],
+        ["code_f2", 24, false],
+        ["code_f3", 16, false],
+        ["code_f4", 6, false],
+        ["tree_0_vote", 4, false],
+        ["tree_1_vote", 4, false],
+        ["tree_2_vote", 4, false],
+        ["tree_3_vote", 4, false],
+        ["tree_4_vote", 4, false],
+        ["tree_5_vote", 4, false],
+        ["tmp", 48, false],
+        ["key_0", 10, false],
+        ["key_1", 10, false],
+        ["key_2", 10, false],
+        ["key_3", 10, false],
+        ["key_4", 10, false],
+        ["key_5", 10, false],
+        ["key_6", 10, false],
+        ["key_7", 10, false],
+        ["key_8", 10, false],
+        ["key_9", 10, false],
+        ["key_10", 10, false],
+        ["key_11", 10, false],
+        ["key_12", 10, false],
+        ["key_13", 10, false],
+        ["key_14", 10, false],
+        ["key_15", 10, false],
+        ["key_16", 10, false],
+        ["key_17", 10, false],
+        ["key_18", 10, false],
+        ["key_19", 10, false],
+        ["key_20", 10, false],
+        ["key_21", 10, false],
+        ["key_22", 10, false],
+        ["key_23", 10, false],
+        ["key_24", 10, false],
+        ["key_25", 10, false],
+        ["key_26", 10, false],
+        ["key_27", 10, false],
+        ["key_28", 10, false],
+        ["key_29", 10, false],
+        ["_padding", 2, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata_t",
+      "id" : 1,
+      "is_struct" : true,
+      "fields" : [
+        ["drop", 1, false],
+        ["ingress_timestamp", 64, false],
+        ["parsed_bytes", 16, false],
+        ["parser_error", 3, false],
+        ["_padding_0", 4, false]
+      ]
+    },
+    {
+      "name" : "ethernet_h",
+      "id" : 2,
+      "is_struct" : false,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "Planter_prefix_h",
+      "id" : 3,
+      "is_struct" : false,
+      "fields" : [
+        ["p", 8, false],
+        ["four", 8, false],
+        ["ver", 8, false],
+        ["typ", 8, false]
+      ]
+    },
+    {
+      "name" : "Planter_h",
+      "id" : 4,
+      "is_struct" : false,
+      "fields" : [
+        ["feature0", 32, false],
+        ["feature1", 32, false],
+        ["feature2", 32, false],
+        ["feature3", 32, false],
+        ["feature4", 32, false],
+        ["result", 32, false]
+      ]
+    },
+    {
+      "name" : "metadata_t",
+      "id" : 5,
+      "is_struct" : true,
+      "fields" : [
+        ["timestamp_ns", 64, false],
+        ["pid", 16, false],
+        ["ingress_port", 3, false],
+        ["egress_port", 3, false],
+        ["truncate_enable", 1, false],
+        ["truncate_length", 16, false],
+        ["rss_enable", 1, false],
+        ["rss_entropy", 12, false],
+        ["drop_reason", 4, false],
+        ["scratch", 32, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata_t",
+      "id" : 1,
+      "header_type" : "standard_metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "Planter_prefix",
+      "id" : 3,
+      "header_type" : "Planter_prefix_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "Planter",
+      "id" : 4,
+      "header_type" : "Planter_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "metadata_t",
+      "id" : 5,
+      "header_type" : "metadata_t",
+      "metadata" : true,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [],
+  "errors" : [
+    ["NoError", 0],
+    ["PacketTooShort", 1],
+    ["NoMatch", 2],
+    ["StackOutOfBounds", 3],
+    ["HeaderTooShort", 4],
+    ["ParserTimeout", 5],
+    ["HeaderDepthLimitExceeded", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "start",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x1234",
+              "mask" : null,
+              "next_state" : "check_planter_version"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "check_planter_version",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "Planter_prefix"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x503401",
+              "mask" : null,
+              "next_state" : "parse_planter"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["Planter_prefix", "p"]
+            },
+            {
+              "type" : "field",
+              "value" : ["Planter_prefix", "four"]
+            },
+            {
+              "type" : "field",
+              "value" : ["Planter_prefix", "ver"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_planter",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "Planter"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        }
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "../XGB_standard_classification_KDD99.p4",
+        "line" : 156,
+        "column" : 8,
+        "source_fragment" : "SwitchDeparser"
+      },
+      "start" : "node_23",
+      "emits" : [
+        {
+          "name" : "node_23",
+          "id" : 0,
+          "sequence_point" : true,
+          "header" : "ethernet",
+          "next" : "node_24"
+        },
+        {
+          "name" : "node_24",
+          "id" : 1,
+          "sequence_point" : true,
+          "header" : "Planter_prefix",
+          "next" : "node_25"
+        },
+        {
+          "name" : "node_25",
+          "id" : 2,
+          "sequence_point" : true,
+          "header" : "Planter",
+          "next" : null
+        }
+      ],
+      "conditionals" : []
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [],
+  "register_arrays" : [],
+  "calculations" : [],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature0",
+      "id" : 5,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 20
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f0"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 200,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature1",
+      "id" : 6,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f1"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 204,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature2",
+      "id" : 7,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 24
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f2"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 208,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature3",
+      "id" : 8,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f3"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 212,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.extract_feature4",
+      "id" : 9,
+      "runtime_data" : [
+        {
+          "name" : "tree",
+          "bitwidth" : 6
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "code_f4"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 216,
+            "column" : 20,
+            "source_fragment" : "tree; ..."
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_prob0",
+      "id" : 10,
+      "runtime_data" : [
+        {
+          "name" : "prob",
+          "bitwidth" : 7
+        },
+        {
+          "name" : "vote",
+          "bitwidth" : 4
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_0_vote"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 272,
+            "column" : 8,
+            "source_fragment" : "tree_0_vote = vote"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_class0",
+      "id" : 11,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_0_vote"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 275,
+            "column" : 8,
+            "source_fragment" : "tree_0_vote = 6"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_prob1",
+      "id" : 12,
+      "runtime_data" : [
+        {
+          "name" : "prob",
+          "bitwidth" : 7
+        },
+        {
+          "name" : "vote",
+          "bitwidth" : 4
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_1_vote"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 281,
+            "column" : 8,
+            "source_fragment" : "tree_1_vote = vote"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_class1",
+      "id" : 13,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_1_vote"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 284,
+            "column" : 8,
+            "source_fragment" : "tree_1_vote = 6"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_prob2",
+      "id" : 14,
+      "runtime_data" : [
+        {
+          "name" : "prob",
+          "bitwidth" : 7
+        },
+        {
+          "name" : "vote",
+          "bitwidth" : 4
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_2_vote"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 290,
+            "column" : 8,
+            "source_fragment" : "tree_2_vote = vote"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_class2",
+      "id" : 15,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_2_vote"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 293,
+            "column" : 8,
+            "source_fragment" : "tree_2_vote = 6"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_prob3",
+      "id" : 16,
+      "runtime_data" : [
+        {
+          "name" : "prob",
+          "bitwidth" : 7
+        },
+        {
+          "name" : "vote",
+          "bitwidth" : 4
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_3_vote"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 299,
+            "column" : 8,
+            "source_fragment" : "tree_3_vote = vote"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_class3",
+      "id" : 17,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_3_vote"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 302,
+            "column" : 8,
+            "source_fragment" : "tree_3_vote = 6"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_prob4",
+      "id" : 18,
+      "runtime_data" : [
+        {
+          "name" : "prob",
+          "bitwidth" : 7
+        },
+        {
+          "name" : "vote",
+          "bitwidth" : 4
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_4_vote"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 308,
+            "column" : 8,
+            "source_fragment" : "tree_4_vote = vote"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_class4",
+      "id" : 19,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_4_vote"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 311,
+            "column" : 8,
+            "source_fragment" : "tree_4_vote = 6"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_prob5",
+      "id" : 20,
+      "runtime_data" : [
+        {
+          "name" : "prob",
+          "bitwidth" : 7
+        },
+        {
+          "name" : "vote",
+          "bitwidth" : 4
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_5_vote"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 317,
+            "column" : 8,
+            "source_fragment" : "tree_5_vote = vote"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_class5",
+      "id" : 21,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tree_5_vote"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 320,
+            "column" : 8,
+            "source_fragment" : "tree_5_vote = 6"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.read_lable",
+      "id" : 22,
+      "runtime_data" : [
+        {
+          "name" : "label",
+          "bitwidth" : 32
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["Planter", "result"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 414,
+            "column" : 8,
+            "source_fragment" : "hdr.Planter.result = label"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "SwitchProcessing.write_default_decision",
+      "id" : 23,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["Planter", "result"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000001"
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 418,
+            "column" : 8,
+            "source_fragment" : "hdr.Planter.result = 1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act",
+      "id" : 24,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "code_f0"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 324,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f0[2:0]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_1"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "code_f1"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 325,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f1[2:0]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "code_f2"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 326,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f2[3:0]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_3"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "code_f3"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 327,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f3[2:0]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_4"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "code_f4"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 328,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f4[0:0]"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_0",
+      "id" : 25,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_5"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f0"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x3"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x0fffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 339,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f0[5:3]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_6"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f1"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x3"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 340,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f1[5:3]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_7"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f2"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x4"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 341,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f2[7:4]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_8"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f3"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x3"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 342,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f3[5:3]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_9"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f4"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x1"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x3f"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 343,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f4[1:1]"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_1",
+      "id" : 26,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_10"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f0"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x6"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x0fffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 354,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f0[8:6]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_11"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f1"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x6"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 355,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f1[8:6]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_12"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f2"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x8"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 356,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f2[11:8]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_13"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f3"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x6"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 357,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f3[8:6]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_14"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f4"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x2"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x3f"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 358,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f4[2:2]"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_2",
+      "id" : 27,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_15"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f0"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x9"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x0fffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 369,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f0[11:9]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_16"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f1"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x9"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 370,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f1[11:9]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_17"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f2"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xc"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 371,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f2[15:12]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_18"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f3"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x9"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 372,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f3[11:9]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_19"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f4"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x3"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x3f"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 373,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f4[3:3]"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_3",
+      "id" : 28,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_20"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f0"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xc"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x0fffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 384,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f0[15:12]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_21"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f1"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xc"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x03"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 385,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f1[13:12]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_22"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f2"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x10"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 386,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f2[19:16]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_23"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f3"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xc"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x03"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 387,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f3[13:12]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_24"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f4"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x4"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x3f"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 388,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f4[4:4]"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_4",
+      "id" : 29,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_25"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f0"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x10"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x0fffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 399,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f0[19:16]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_26"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f1"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xe"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x03"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 400,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f1[15:14]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_27"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f2"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x14"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x0f"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 401,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f2[23:20]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_28"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f3"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0xe"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x03"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 402,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f3[15:14]"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "key_29"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : ">>",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "code_f4"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x5"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0x3f"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x01"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x03ff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 403,
+            "column" : 16,
+            "source_fragment" : "(bit<10>) code_f4[5:5]"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "act_5",
+      "id" : 30,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 452,
+            "column" : 8,
+            "source_fragment" : "tmp = hdr.ethernet.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 453,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = hdr.ethernet.srcAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 454,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.srcAddr = tmp"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "../XGB_standard_classification_KDD99.p4",
+        "line" : 170,
+        "column" : 8,
+        "source_fragment" : "SwitchProcessing"
+      },
+      "init_table" : "SwitchProcessing.lookup_feature0",
+      "tables" : [
+        {
+          "name" : "SwitchProcessing.lookup_feature0",
+          "id" : 0,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 219,
+            "column" : 10,
+            "source_fragment" : "lookup_feature0"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.Planter.feature0",
+              "target" : ["Planter", "feature0"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "ternary",
+          "type" : "simple",
+          "max_size" : 14,
+          "num_masks" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [5, 0],
+          "actions" : ["SwitchProcessing.extract_feature0", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature1",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature0" : "SwitchProcessing.lookup_feature1",
+            "NoAction" : "SwitchProcessing.lookup_feature1"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature1",
+          "id" : 1,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 229,
+            "column" : 10,
+            "source_fragment" : "lookup_feature1"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.Planter.feature1",
+              "target" : ["Planter", "feature1"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "ternary",
+          "type" : "simple",
+          "max_size" : 3,
+          "num_masks" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [6, 1],
+          "actions" : ["SwitchProcessing.extract_feature1", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature2",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature1" : "SwitchProcessing.lookup_feature2",
+            "NoAction" : "SwitchProcessing.lookup_feature2"
+          },
+          "default_entry" : {
+            "action_id" : 1,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature2",
+          "id" : 2,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 239,
+            "column" : 10,
+            "source_fragment" : "lookup_feature2"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.Planter.feature2",
+              "target" : ["Planter", "feature2"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "ternary",
+          "type" : "simple",
+          "max_size" : 18,
+          "num_masks" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7, 2],
+          "actions" : ["SwitchProcessing.extract_feature2", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature3",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature2" : "SwitchProcessing.lookup_feature3",
+            "NoAction" : "SwitchProcessing.lookup_feature3"
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature3",
+          "id" : 3,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 249,
+            "column" : 10,
+            "source_fragment" : "lookup_feature3"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.Planter.feature3",
+              "target" : ["Planter", "feature3"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "ternary",
+          "type" : "simple",
+          "max_size" : 4,
+          "num_masks" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [8, 3],
+          "actions" : ["SwitchProcessing.extract_feature3", "NoAction"],
+          "base_default_next" : "SwitchProcessing.lookup_feature4",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature3" : "SwitchProcessing.lookup_feature4",
+            "NoAction" : "SwitchProcessing.lookup_feature4"
+          },
+          "default_entry" : {
+            "action_id" : 3,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_feature4",
+          "id" : 4,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 259,
+            "column" : 10,
+            "source_fragment" : "lookup_feature4"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.Planter.feature4",
+              "target" : ["Planter", "feature4"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "ternary",
+          "type" : "simple",
+          "max_size" : 1,
+          "num_masks" : 32,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [9, 4],
+          "actions" : ["SwitchProcessing.extract_feature4", "NoAction"],
+          "base_default_next" : "tbl_act",
+          "next_tables" : {
+            "SwitchProcessing.extract_feature4" : "tbl_act",
+            "NoAction" : "tbl_act"
+          },
+          "default_entry" : {
+            "action_id" : 4,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act",
+          "id" : 5,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [24],
+          "actions" : ["act"],
+          "base_default_next" : "SwitchProcessing.lookup_leaf_id0",
+          "next_tables" : {
+            "act" : "SwitchProcessing.lookup_leaf_id0"
+          },
+          "default_entry" : {
+            "action_id" : 24,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_leaf_id0",
+          "id" : 6,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 323,
+            "column" : 10,
+            "source_fragment" : "lookup_leaf_id0"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id0",
+              "target" : ["scalars", "key_0"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id0",
+              "target" : ["scalars", "key_1"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id0",
+              "target" : ["scalars", "key_2"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id0",
+              "target" : ["scalars", "key_3"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id0",
+              "target" : ["scalars", "key_4"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 178,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10, 11],
+          "actions" : ["SwitchProcessing.read_prob0", "SwitchProcessing.write_default_class0"],
+          "base_default_next" : "tbl_act_0",
+          "next_tables" : {
+            "SwitchProcessing.read_prob0" : "tbl_act_0",
+            "SwitchProcessing.write_default_class0" : "tbl_act_0"
+          },
+          "default_entry" : {
+            "action_id" : 11,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_0",
+          "id" : 7,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [25],
+          "actions" : ["act_0"],
+          "base_default_next" : "SwitchProcessing.lookup_leaf_id1",
+          "next_tables" : {
+            "act_0" : "SwitchProcessing.lookup_leaf_id1"
+          },
+          "default_entry" : {
+            "action_id" : 25,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_leaf_id1",
+          "id" : 8,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 338,
+            "column" : 10,
+            "source_fragment" : "lookup_leaf_id1"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id1",
+              "target" : ["scalars", "key_5"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id1",
+              "target" : ["scalars", "key_6"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id1",
+              "target" : ["scalars", "key_7"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id1",
+              "target" : ["scalars", "key_8"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id1",
+              "target" : ["scalars", "key_9"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 162,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [12, 13],
+          "actions" : ["SwitchProcessing.read_prob1", "SwitchProcessing.write_default_class1"],
+          "base_default_next" : "tbl_act_1",
+          "next_tables" : {
+            "SwitchProcessing.read_prob1" : "tbl_act_1",
+            "SwitchProcessing.write_default_class1" : "tbl_act_1"
+          },
+          "default_entry" : {
+            "action_id" : 13,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_1",
+          "id" : 9,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [26],
+          "actions" : ["act_1"],
+          "base_default_next" : "SwitchProcessing.lookup_leaf_id2",
+          "next_tables" : {
+            "act_1" : "SwitchProcessing.lookup_leaf_id2"
+          },
+          "default_entry" : {
+            "action_id" : 26,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_leaf_id2",
+          "id" : 10,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 353,
+            "column" : 10,
+            "source_fragment" : "lookup_leaf_id2"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id2",
+              "target" : ["scalars", "key_10"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id2",
+              "target" : ["scalars", "key_11"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id2",
+              "target" : ["scalars", "key_12"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id2",
+              "target" : ["scalars", "key_13"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id2",
+              "target" : ["scalars", "key_14"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 189,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [14, 15],
+          "actions" : ["SwitchProcessing.read_prob2", "SwitchProcessing.write_default_class2"],
+          "base_default_next" : "tbl_act_2",
+          "next_tables" : {
+            "SwitchProcessing.read_prob2" : "tbl_act_2",
+            "SwitchProcessing.write_default_class2" : "tbl_act_2"
+          },
+          "default_entry" : {
+            "action_id" : 15,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_2",
+          "id" : 11,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [27],
+          "actions" : ["act_2"],
+          "base_default_next" : "SwitchProcessing.lookup_leaf_id3",
+          "next_tables" : {
+            "act_2" : "SwitchProcessing.lookup_leaf_id3"
+          },
+          "default_entry" : {
+            "action_id" : 27,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_leaf_id3",
+          "id" : 12,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 368,
+            "column" : 10,
+            "source_fragment" : "lookup_leaf_id3"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id3",
+              "target" : ["scalars", "key_15"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id3",
+              "target" : ["scalars", "key_16"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id3",
+              "target" : ["scalars", "key_17"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id3",
+              "target" : ["scalars", "key_18"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id3",
+              "target" : ["scalars", "key_19"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 171,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [16, 17],
+          "actions" : ["SwitchProcessing.read_prob3", "SwitchProcessing.write_default_class3"],
+          "base_default_next" : "tbl_act_3",
+          "next_tables" : {
+            "SwitchProcessing.read_prob3" : "tbl_act_3",
+            "SwitchProcessing.write_default_class3" : "tbl_act_3"
+          },
+          "default_entry" : {
+            "action_id" : 17,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_3",
+          "id" : 13,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [28],
+          "actions" : ["act_3"],
+          "base_default_next" : "SwitchProcessing.lookup_leaf_id4",
+          "next_tables" : {
+            "act_3" : "SwitchProcessing.lookup_leaf_id4"
+          },
+          "default_entry" : {
+            "action_id" : 28,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_leaf_id4",
+          "id" : 14,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 383,
+            "column" : 10,
+            "source_fragment" : "lookup_leaf_id4"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id4",
+              "target" : ["scalars", "key_20"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id4",
+              "target" : ["scalars", "key_21"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id4",
+              "target" : ["scalars", "key_22"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id4",
+              "target" : ["scalars", "key_23"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id4",
+              "target" : ["scalars", "key_24"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 110,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [18, 19],
+          "actions" : ["SwitchProcessing.read_prob4", "SwitchProcessing.write_default_class4"],
+          "base_default_next" : "tbl_act_4",
+          "next_tables" : {
+            "SwitchProcessing.read_prob4" : "tbl_act_4",
+            "SwitchProcessing.write_default_class4" : "tbl_act_4"
+          },
+          "default_entry" : {
+            "action_id" : 19,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_4",
+          "id" : 15,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [29],
+          "actions" : ["act_4"],
+          "base_default_next" : "SwitchProcessing.lookup_leaf_id5",
+          "next_tables" : {
+            "act_4" : "SwitchProcessing.lookup_leaf_id5"
+          },
+          "default_entry" : {
+            "action_id" : 29,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "SwitchProcessing.lookup_leaf_id5",
+          "id" : 16,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 398,
+            "column" : 10,
+            "source_fragment" : "lookup_leaf_id5"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id5",
+              "target" : ["scalars", "key_25"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id5",
+              "target" : ["scalars", "key_26"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id5",
+              "target" : ["scalars", "key_27"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id5",
+              "target" : ["scalars", "key_28"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "lookup_leaf_id5",
+              "target" : ["scalars", "key_29"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 108,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [20, 21],
+          "actions" : ["SwitchProcessing.read_prob5", "SwitchProcessing.write_default_class5"],
+          "base_default_next" : "SwitchProcessing.decision",
+          "next_tables" : {
+            "SwitchProcessing.read_prob5" : "SwitchProcessing.decision",
+            "SwitchProcessing.write_default_class5" : "SwitchProcessing.decision"
+          },
+          "default_entry" : {
+            "action_id" : 21,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "SwitchProcessing.decision",
+          "id" : 17,
+          "sequence_point" : true,
+          "source_info" : {
+            "filename" : "../XGB_standard_classification_KDD99.p4",
+            "line" : 421,
+            "column" : 10,
+            "source_fragment" : "decision"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "tree_0_vote",
+              "target" : ["scalars", "tree_0_vote"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "tree_1_vote",
+              "target" : ["scalars", "tree_1_vote"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "tree_2_vote",
+              "target" : ["scalars", "tree_2_vote"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "tree_3_vote",
+              "target" : ["scalars", "tree_3_vote"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "tree_4_vote",
+              "target" : ["scalars", "tree_4_vote"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "tree_5_vote",
+              "target" : ["scalars", "tree_5_vote"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 169348,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [22, 23],
+          "actions" : ["SwitchProcessing.read_lable", "SwitchProcessing.write_default_decision"],
+          "base_default_next" : "tbl_act_5",
+          "next_tables" : {
+            "SwitchProcessing.read_lable" : "tbl_act_5",
+            "SwitchProcessing.write_default_decision" : "tbl_act_5"
+          },
+          "default_entry" : {
+            "action_id" : 23,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act_5",
+          "id" : 18,
+          "sequence_point" : true,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [30],
+          "actions" : ["act_5"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "act_5" : null
+          },
+          "default_entry" : {
+            "action_id" : 30,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : []
+    }
+  ],
+  "checksums" : [],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : []
+}

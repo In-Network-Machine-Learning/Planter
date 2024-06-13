@@ -1,0 +1,1 @@
+This folder contains all Planter-supported modules. Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

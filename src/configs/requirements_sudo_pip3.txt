@@ -1,0 +1,8 @@
+ numpy==1.19.2 
+scikit_learn==1.0 
+scapy==2.4.3
+seaborn==0.11.2
+category_encoders==2.2.2
+wget==1.20.1
+pytorch==0.4.0
+multiprocess=0.70.12

@@ -1,0 +1,15 @@
+# Table forward, Entry 0
+# key:[ ethernet.dstAddr=0x147bac341c9a ]
+# response:[ dest_port=0 action=forwardPacket ]
+table_add forward dropPacket 0x147bac341c9a/48 => 0
+
+# Table forward, Entry 1
+# key:[ ethernet.dstAddr=0xb8599febe4f4 ]
+# response:[ dest_port=0 action=forwardPacket ]
+#table_add forward dropPacket 0xb8599febe4f4/48 => 0
+
+# run traffic
+run_traffic packets
+
+# end
+exit

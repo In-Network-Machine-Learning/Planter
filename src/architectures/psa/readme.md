@@ -1,0 +1,1 @@
+This folder contains Planter-supported PSA architecture module [Link](https://p4.org/p4-spec/docs/PSA.html). Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

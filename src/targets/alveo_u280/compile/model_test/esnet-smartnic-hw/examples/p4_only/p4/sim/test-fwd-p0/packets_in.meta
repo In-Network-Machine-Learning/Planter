@@ -1,0 +1,4 @@
+smartnic_metadata.timestamp_ns=1 smartnic_metadata.egress_port=3
+smartnic_metadata.timestamp_ns=2 smartnic_metadata.egress_port=3
+smartnic_metadata.timestamp_ns=3 smartnic_metadata.egress_port=3
+smartnic_metadata.timestamp_ns=4 smartnic_metadata.egress_port=3

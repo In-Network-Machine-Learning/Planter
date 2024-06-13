@@ -1,0 +1,19 @@
+{
+    "directory config": {
+        "data": "/Users/changgang/Documents/GitHub/Data",
+        "work": "/Users/changgang/Documents/GitHub/Planter_for_public"
+    },
+    "model config": {
+        "model": "DT",
+        "type": "EB"
+    },
+    "data config": {
+        "dataset": "UNSW_sample",
+        "number of features": 5
+    },
+    "timer log": {
+        "load data": {
+            "start": 1712615746.566884
+        }
+    }
+}

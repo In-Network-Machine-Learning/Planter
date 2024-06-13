@@ -1,0 +1,34 @@
+name: p4_app
+info: |
+  p4_app is the top level module for the p4 application core used on the esnet smart nic platform.
+
+regs:
+  - default:
+      width  : 32
+      access : ro
+      init   : 0
+
+  - name: status
+    init: 0xcafebeef
+
+  - name: rss_config
+    access: rw
+    fields:
+      - name: enable
+        desc: set to 1 to enable rss_config register (activates register ovveride).
+        width: 1
+        init : 0
+      - name: rss_enable
+        desc: set to 1 to enable rss_entropy register (overrides open-nic-shell rss hash result with rss_entropy).
+        width: 1
+        init : 0
+      - name: rss_entropy
+        desc: set to 12-bit rss_entropy hash value (used for open-nic-shell qdma qid selection).
+        width: 12
+        init : 0x000
+
+  - name: tpause
+    desc   : tpause enable register.  when set to 1, (overrides) deasserts tready on the ingress axi4s interface. 
+    access : rw
+    width  : 8
+    init   : 0x00

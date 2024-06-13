@@ -1,0 +1,18 @@
+name: p4_and_verilog
+info: |
+  p4_and_verilog is the top level module for the p4 application core used on the esnet smart nic platform.
+
+regs:
+  - default:
+      width  : 32
+      access : ro
+      init   : 0
+
+  - name: status
+    init: 0xcafebeef
+
+  - name: tpause
+    desc   : tpause enable register.  when set to 1, (overrides) deasserts tready on the ingress axi4s interface. 
+    access : rw
+    width  : 8
+    init   : 0x00

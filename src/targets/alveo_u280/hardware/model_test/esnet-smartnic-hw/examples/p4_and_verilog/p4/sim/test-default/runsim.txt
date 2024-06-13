@@ -1,0 +1,25 @@
+# Table forward, Entry 0 
+# key:[ ethernet.dstAddr=0080c2000000 ] 
+# response:[ dest_port=3 action=forwardPacket ]
+table_add forward forwardPacket 0x0080c2000000/48 => 0x3 0
+
+# Table forward, Entry 1
+# key:[ ethernet.dstAddr=0080c2000001 ]
+# response:[ dest_port=3 action=forwardPacket ]
+table_add forward forwardPacket 0x0080c2000001/48 => 0x3 0
+
+# Table forward, Entry 2
+# key:[ ethernet.dstAddr=0080c2000002 ] 
+# response:[ dest_port=3 action=forwardPacket ]
+table_add forward forwardPacket 0x0080c2000002/48 => 0x3 0
+
+# Table forward, Entry 3
+# key:[ ethernet.dstAddr=0080c2000003 ] 
+# response:[ dest_port=3 action=forwardPacket ]
+table_add forward forwardPacket 0x0080c2000003/48 => 0x3 0
+
+# run traffic
+run_traffic packets
+
+# end
+exit

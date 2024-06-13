@@ -1,0 +1,9 @@
+#
+# test-v4-drop
+#
+
+table_add filter dropPacket 1 0x26001700db703e2f0a0027fffe5cb465 =>
+table_add filter dropPacket 1 0x26001700db703e2f0a0027fffe7114ed =>
+
+run_traffic packets
+

@@ -1,0 +1,148 @@
+# Fully automated full chip assembly done from here.
+#
+#  Yatish Kumar
+#  Apr 2021
+#----------------------------------------------------
+
+# Configure project paths
+PROJ_ROOT := $(CURDIR)
+include $(PROJ_ROOT)/config.mk
+
+BOARD ?= au280
+BUILD_NAME ?= open-nic-ci
+
+vanilla_build_name = vanilla
+open_nic_build = $(ONS_ROOT)/build/$(BOARD)_$(BUILD_NAME)
+plugin_dir = ../../src/open-nic-plugin/esnet_smartnic
+
+APP_ROOT            ?= $(PROJ_ROOT)/src/p4_app
+ARTIFACTS_DIR       ?= $(APP_ROOT)/artifacts
+ARTIFACTS_BUILD_DIR ?= $(ARTIFACTS_DIR)/$(BUILD_NAME)
+
+# Export paths (referenced in Tcl source lists)
+export OUTPUT_ROOT
+export LIB_ROOT
+
+vanilla_build_dir = $(ONS_ROOT)/build/$(BOARD)_$(vanilla_build_name)
+artifact_dir = $(open_nic_build)/$(BUILD_NAME)/esnet-smartnic-hwapi
+bitfile_dir  = $(artifact_dir)/bitfiles
+
+CI_PIPELINE_ID       ?= $(shell date +"%s")
+bitstream_userid     ?= $(shell printf "0x%08x" $(CI_PIPELINE_ID))
+bitstream_usr_access ?= $(bitstream_userid)
+
+regmap_dir   = src/smartnic_322mhz/build/regio-yaml
+
+jobs ?= 32
+
+max_pkt_len   ?= 1518
+vivado_tclargs = -board $(BOARD) -jobs $(jobs) -tag $(BUILD_NAME) -user_plugin $(plugin_dir)  -num_phys_func 2 -num_cmac_port 2 -num_queue 512 \
+	         -bitstream_userid $(bitstream_userid) -bitstream_usr_access $(bitstream_usr_access) -max_pkt_len $(max_pkt_len)
+
+help :	
+	@echo "make init_open_nic_build   -- Invoke this to create a shell build with build_name = $(open_nic_build)"
+
+echo_vars:
+	@echo "          PROJ_ROOT: $(PROJ_ROOT)"
+	@echo "           APP_ROOT: $(APP_ROOT)"
+	@echo "              BOARD: $(BOARD)"
+	@echo "         BUILD_NAME: $(BUILD_NAME)"
+	@echo "ARTIFACTS_BUILD_DIR: $(ARTIFACTS_BUILD_DIR)"
+	@echo "        max_pkt_len: $(max_pkt_len)"
+	@echo "               jobs: $(jobs)"
+
+# Include targets for config validation
+# - checks Vivado version
+# - checks that licenses are available for IP, where required
+# - checks that required command-line utilities are available in path
+include $(SCRIPTS_ROOT)/Makefiles/config.mk
+
+# ------------------------------------------------
+# This set of commands are dedicated to CI builds
+# ------------------------------------------------
+
+ci_build : ci_build_vanilla unpackage_vanilla bitfile package
+	@echo "Final artifact is ready"
+
+ci_build_vanilla : $(vanilla_artifact)
+	@echo "Vanilla artifact is ready"
+
+$(vanilla_artifact) : vanilla_bitfile package_vanilla
+
+# -------------------------------------------------------------------
+# These commands can be used selectively outside the CI environment
+# -------------------------------------------------------------------
+package_vanilla :
+	@echo "Packaging artifact from vanilla build"
+	@( cd $(vanilla_build_dir) && \
+	   tar czf vanilla_artifact.tar.gz vivado_ip \
+	)
+
+unpackage_vanilla :
+	@echo "Unpacking artifact from vanilla build"
+	@mkdir -p $(open_nic_build)
+	@tar xzf $(vanilla_build_dir)/vanilla_artifact.tar.gz -C $(open_nic_build)
+
+package :
+	@echo "Packaging artifact from top level build"
+	@echo $(artifact_dir)
+	@mkdir -p $(artifact_dir)
+	@mkdir -p $(artifact_dir)/firmware
+	@mkdir -p $(artifact_dir)/libvitisnetp4drv
+	@mkdir -p $(artifact_dir)/regmap/spec
+	@mkdir -p $(artifact_dir)/wireshark/plugins
+	-@tar xf $(APP_ROOT)/app_if/smartnic_322mhz_app_drv.tar -C $(artifact_dir)/libvitisnetp4drv
+	-@cp $(APP_ROOT)/app_if/smartnic_322mhz_app.p4 $(artifact_dir)/firmware/esnet-smartnic.p4
+	-@cp $(APP_ROOT)/app_if/*.lua $(artifact_dir)/wireshark/plugins
+	@echo "The wireshark/plugins directory is a placeholder for wireshark .lua files,"    > $(artifact_dir)/wireshark/plugins/README.md
+	@echo "which can be used to decode custom protocol headers defined in the .p4 file." >> $(artifact_dir)/wireshark/plugins/README.md
+	@cp -r $(ONS_ROOT)/regmap/spec/* $(artifact_dir)/regmap/spec
+	@cp $(regmap_dir)/* $(artifact_dir)/regmap/spec
+	@$(REGIO_ROOT)/regio-elaborate \
+	   --file-type top \
+	   --include-dir $(artifact_dir)/regmap/spec \
+	   --output-file $(artifact_dir)/regmap/esnet-smartnic-top-ir.yaml \
+	   $(artifact_dir)/regmap/spec/esnet-smartnic-top.yaml
+	@cp $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/open_nic_shell.bit $(artifact_dir)/firmware/esnet-smartnic.bit
+	@cp $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/open_nic_shell.mcs $(artifact_dir)/firmware/esnet-smartnic.mcs	
+	@cp $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/*.ltx $(artifact_dir)/firmware
+	@mkdir -p $(ARTIFACTS_BUILD_DIR)
+	@( cd $(artifact_dir)/.. && \
+	   echo "packing artifact zip file artifacts.$(BOARD).$(BUILD_NAME).0.zip" && \
+	   zip -r $(ARTIFACTS_BUILD_DIR)/artifacts.$(BOARD).$(BUILD_NAME).0.zip esnet-smartnic-hwapi \
+	)
+
+project : config_check
+	@echo "Creating top level project with no compiles ( fast compile )"
+	( cd $(ONS_ROOT)/script && \
+          vivado -mode batch -source build.tcl -tclargs -synth_ip 0 -impl 0 -sim 0  $(vivado_tclargs) \
+        )
+
+project_ip : config_check
+	@echo "Creating top level project with compiled IP ( medium fast compile )"
+	( cd $(ONS_ROOT)/script && \
+	  vivado -mode batch -source build.tcl -tclargs  -synth_ip 1 -impl 0 -sim 0 $(vivado_tclargs)) \
+        )
+
+bitfile : config_check
+	@echo "Creating top level project with bitfile ( slow compile )"
+	( cd $(ONS_ROOT)/script && \
+	  vivado -mode batch -source build.tcl -tclargs -synth_ip 1 -impl 1 -post_impl 1 -sim 0 $(vivado_tclargs) -rebuild 1 \
+        )
+	@ test -e $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/open_nic_shell.bit || (echo ERROR: bitfile not produced. && false)
+
+vanilla_bitfile : config_check
+	@echo "Creating vanilla bitfile"
+	( cd $(ONS_ROOT)/script && \
+	  vivado -mode batch -source build.tcl -tclargs -synth_ip 1 -impl 1 -post_impl 1 -sim 0 -rebuild 1 -board $(BOARD) -num_phys_func 2 -num_cmac_port 2 -num_queue 512  \
+	  -bitstream_userid $(bitstream_userid) -bitstream_usr_access $(bitstream_usr_access) -tag $(BUILD_NAME) \
+        )
+	@ test -e $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/open_nic_shell.bit || (echo ERROR: bitfile not produced. && false)
+	mkdir vanilla_artifact
+	cp $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/open_nic_shell.mcs vanilla_artifact
+	cp $(open_nic_build)/open_nic_shell/open_nic_shell.runs/impl_1/open_nic_shell.bit vanilla_artifact
+
+clean_build:
+	@rm -rf $(open_nic_build)
+
+.PHONY : ci_build_vanilla ci_build_bitfile vanilla_bitfile package_vanilla unpackage_vanilla bitfile package clean_build

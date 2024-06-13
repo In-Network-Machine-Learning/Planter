@@ -1,0 +1,36 @@
+==============================================
+Configuring P4 application 'model_test':
+==============================================
+APP_DIR      : /home/liam/Planter/src/targets/alveo_u280/hardware/model_test
+APP_NAME     : model_test
+APP_ROOT     : /home/liam/Planter/src/targets/alveo_u280/hardware/model_test/.app/src/p4_app
+BOARD        : au280
+BUILD_NAME   : model_test
+ARTIFACTS_DIR: /home/liam/Planter/src/targets/alveo_u280/hardware/model_test/artifacts
+P4_FILE      : /home/liam/Planter/src/targets/alveo_u280/hardware/model_test/p4/esnet-smartnic.p4
+P4_OPTS      : CONFIG.PKT_RATE {150} CONFIG.OUTPUT_METADATA_FOR_DROPPED_PKTS {true}
+WARNING: The currently-configured Vivado version differs in patch revision from the supported Vivado version.
+
+    Supported:  Vivado 2022.1.1
+    Configured: Vivado 2022.1
+
+    The configured version of Vivado *should* work with this repository, since in general
+    releases with the same major/minor revision are expected to be compatible.
+    However, it is recommended to use the supported version, including patch revision.
+
+
+****** Vivado v2022.1 (64-bit)
+  **** SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+  **** IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+
+source /home/liam/Planter/src/targets/alveo_u280/hardware/model_test/esnet-smartnic-hw/esnet-fpga-library/scripts/vivado/check_ip_license.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/Vivado/2022.1/data/ip'.
+License keys found for xilinx.com:ip:cmac_usplus:3.1: cmac_usplus@2020.05 cmac_an_lt@2020.05 ieee802d3_rs_fec_full@2018.04 ieee802d3_rs_fec_only@2018.04.
+License keys found for xilinx.com:ip:vitis_net_p4:1.1: sdnet_p4@2022.04 hcam_base@2022.04.
+INFO: [Common 17-206] Exiting Vivado at Sat Apr  8 05:12:40 2023...
+Starting bitfile build model_test...
+Generating smartnic platform IP...
+Generating RTL for: ../app_if/src/smartnic_322mhz_app_decoder.yaml ... 

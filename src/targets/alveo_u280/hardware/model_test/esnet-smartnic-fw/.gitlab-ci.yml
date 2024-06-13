@@ -1,0 +1,234 @@
+---
+include:
+  - template: 'Workflows/Branch-Pipelines.gitlab-ci.yml'
+
+stages:
+  - pull_sn_hw
+  - package
+  - trigger_downstream
+
+variables:
+  # These variables are hard-coded here and are not expected to be overridden
+  #
+  SN_HW_GROUP_DEFAULT:    ht
+  SN_HW_REPO_DEFAULT:     esnet-smartnic-ht
+  SN_HW_BRANCH_DEFAULT:   main
+  SN_HW_API_JOB_DEFAULT:  export_hwapi
+  SN_HW_APP_NAME_DEFAULT: esnet-smartnic-ht
+  SN_HW_BOARD_DEFAULT:    au280
+
+  # These variables are initialized to the defaults above but may be overridden
+  # by manual pipeline runs or from triggered pipelines from other repos
+  #
+  # NOTE: It is important that these values are initialized to match the defaults.
+  #       Simply setting them to $SN_HW_*_DEFAULT breaks the web ui for manual pipelines
+  #       and *also* variable comparisons in rules:if statements.
+  #
+  SN_HW_GROUP:
+    value: ht
+    description: group namespace for hwapi artifact
+  SN_HW_REPO:
+    value: esnet-smartnic-ht
+    description: repo name for hwapi artifact
+  SN_HW_BRANCH:
+    value: main
+    description: branch for hwapi artifact
+  SN_HW_API_JOB:
+    value: export_hwapi
+    description: job for hwapi artifact
+  SN_HW_APP_NAME:
+    value: esnet-smartnic-ht
+    description: app name for hwapi artifact
+  SN_HW_BOARD:
+    value: au280
+    description: board type for hwapi artifact
+
+pull_sn_hw:
+  stage: pull_sn_hw
+  image: ubuntu:focal
+  variables:
+    ESNET_SMARTNIC_HWAPI_URL: "$CI_API_V4_URL/projects/$SN_HW_GROUP%2F$SN_HW_REPO/jobs/artifacts/$SN_HW_BRANCH/download?job_token=$CI_JOB_TOKEN&job=$SN_HW_API_JOB"
+    GIT_SUBMODULE_STRATEGY: none
+  before_script:
+    - apt update -y
+    - ln -fs /usr/share/zoneinfo/America/Toronto /etc/localtime
+    - apt install -y --no-install-recommends wget ca-certificates
+  script:
+    - echo "$SN_HW_APP_NAME $SN_HW_BOARD"
+    - echo "Downloading smartnic hwapi"
+    - mkdir -p ./sn-hw/
+    - |
+      wget \
+        --no-verbose \
+        --trust-server-names \
+        --content-disposition \
+        --directory-prefix=./sn-hw \
+        $ESNET_SMARTNIC_HWAPI_URL
+    - |
+      cat <<_EOF >> hwapi.env
+      SN_HW_REPO=$SN_HW_REPO
+      SN_HW_BRANCH=$SN_HW_BRANCH
+      SN_HW_APP_NAME=$SN_HW_APP_NAME
+      SN_HW_BOARD=$SN_HW_BOARD
+      _EOF
+    - ls ./sn-hw/*.zip | sed -re 's/^.*\.([0-9]+)\.zip$/SN_HW_VER=\1/' >> hwapi.env
+    - cat hwapi.env
+  artifacts:
+    name: "artifacts.$CI_PROJECT_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    paths:
+      - sn-hw
+    expire_in: 3 month
+    reports:
+      dotenv:
+        hwapi.env
+  needs: []
+
+.compose_package:
+  stage: package
+  image: docker:20.10.10
+  services:
+    - docker:20.10.10-dind
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    OS_CODENAME: focal
+    SN_FW_REPO: ${CI_PROJECT_NAME}
+    SN_FW_BRANCH: ${CI_COMMIT_BRANCH}
+    SN_FW_VER: ${CI_PIPELINE_ID}
+    DOCKER_COMPOSE_URL: https://dispense.es.net/Linux/github-mirrors/docker/compose/v2.12.2/docker-compose-linux-x86_64
+    # Give our docker compose stack a unique prefix in case multiple concurrent jobs run on the same gitlab-ci runner
+    COMPOSE_PROJECT_NAME: ${CI_PROJECT_NAME}-pipe${CI_PIPELINE_ID}-job${CI_JOB_ID}
+  before_script:
+    # Install docker compose v2 plugin
+    - mkdir -p /usr/local/lib/docker/cli-plugins
+    - wget  -O /usr/local/lib/docker/cli-plugins/docker-compose ${DOCKER_COMPOSE_URL}
+    - chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+    - docker compose version
+  script:
+    - |
+      cat <<_EOF > .env
+      SN_HW_REPO=${SN_HW_REPO}
+      SN_HW_BRANCH=${SN_HW_BRANCH}
+      SN_HW_APP_NAME=${SN_HW_APP_NAME}
+      SN_HW_BOARD=${SN_HW_BOARD}
+      SN_HW_VER=${SN_HW_VER}
+
+      SN_FW_REPO=${SN_FW_REPO}
+      SN_FW_BRANCH=${SN_FW_BRANCH}
+      SN_FW_VER=${SN_FW_VER}
+      OS_CODENAME=${OS_CODENAME}
+      _EOF
+    - cat .env
+    - echo -e "\e[0Ksection_start:`date +%s`:section_001[collapsed=true]\r\e[0KExpanded compose config"
+    - docker compose config
+    - echo -e "\e[0Ksection_end:`date +%s`:section_001\r\e[0K"
+    - echo -e "\e[0Ksection_start:`date +%s`:section_002[collapsed=true]\r\e[0KDebug info for compose in CI"
+    - docker compose ls
+    - docker compose ps
+    - docker container ls | grep "$COMPOSE_PROJECT_NAME" || /bin/true
+    - docker volume    ls | grep "$COMPOSE_PROJECT_NAME" || /bin/true
+    - echo -e "\e[0Ksection_end:`date +%s`:section_002\r\e[0K"
+    - echo -e "\e[0Ksection_start:`date +%s`:section_003[collapsed=true]\r\e[0KContainer Build"
+    - docker compose build --no-cache sn-fw-pkg
+    - echo -e "\e[0Ksection_end:`date +%s`:section_003\r\e[0K"
+    # Clean up absolutely everything related to our compose stack *before* we run
+    - docker compose down -v --remove-orphans
+    # Run the build
+    - docker compose run --no-TTY --rm sn-fw-pkg
+    # Clean up absolutely everything related to our compose stack *after* we run
+    - docker compose down -v --remove-orphans
+    - |
+      cat <<_EOF >> fwapi.env
+      SN_FW_API_JOB_NUMBER=$CI_JOB_ID
+      _EOF
+    - cat fwapi.env
+  artifacts:
+    name: "artifacts.$CI_PROJECT_NAME.$SN_HW_BOARD.$SN_HW_APP_NAME.$CI_JOB_NAME.$CI_PIPELINE_ID"
+    paths:
+      - sn-stack
+    expire_in: 3 month
+    reports:
+      dotenv:
+        fwapi.env
+      junit:
+        - sn-stack/debs/${OS_CODENAME}/meson-logs/testlog.junit.xml
+  needs:
+    - pull_sn_hw
+
+package_focal:
+  extends:
+    - .compose_package
+  variables:
+    OS_CODENAME: focal
+
+# This is an unfortunate hack to workaround downstream SW build failures.
+#
+# This repo's pipeline is invoked by many different HW/FPGA builds.  This results in the "latest successful" build
+# containing a fairly random choice of a HW pipeline.  The downstream SW repo for HT wants to pull the artifacts
+# from the "latest successful" FW pipeline as part of its builds.  This job ensures that we force the FW pipelines
+# to "fail" whenever they're non-HT builds so they are no longer candidates for "latest successful".
+#
+# Note that this failure does not stop this FW pipeline from producing a perfectly usable artifact.  It only
+# prevents non-HT pipelines from looking "successful" from the perspective of gitlab CI.
+
+fail_if_not_default_context:
+  stage: trigger_downstream
+  image: ubuntu:focal
+  script:
+    - |
+      echo "Default Context"
+      cat <<_EOF | tee def_context.txt
+      SN_HW_GROUP:    $SN_HW_GROUP_DEFAULT
+      SN_HW_REPO:     $SN_HW_REPO_DEFAULT
+      SN_HW_BRANCH:   $SN_HW_BRANCH_DEFAULT
+      SN_HW_API_JOB:  $SN_HW_API_JOB_DEFAULT
+      SN_HW_APP_NAME: $SN_HW_APP_NAME_DEFAULT
+      SN_HW_BOARD:    $SN_HW_BOARD_DEFAULT
+      _EOF
+    - |
+      echo "Current Context"
+      cat <<_EOF | tee cur_context.txt
+      SN_HW_GROUP:    $SN_HW_GROUP
+      SN_HW_REPO:     $SN_HW_REPO
+      SN_HW_BRANCH:   $SN_HW_BRANCH
+      SN_HW_API_JOB:  $SN_HW_API_JOB
+      SN_HW_APP_NAME: $SN_HW_APP_NAME
+      SN_HW_BOARD:    $SN_HW_BOARD
+      _EOF
+    # Ensure that we're building in the default context
+    - diff def_context.txt cur_context.txt
+  needs:
+    - package_focal
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH)
+
+.trigger_sw:
+  stage: trigger_downstream
+  # Make sure the downstream pipeline doesn't inherit any of the global env vars from this project
+  # Note: entirely disabling global variable inheritance appears to make global vars unavailable for
+  #       even the rules evaluation for *this* trigger job
+  inherit:
+    variables:
+      - SN_HW_APP_NAME
+      - SN_HW_BOARD
+  variables:
+    SN_FW_GROUP: $CI_PROJECT_NAMESPACE
+    SN_FW_REPO: $CI_PROJECT_NAME
+    SN_FW_BRANCH: $CI_COMMIT_BRANCH
+    # override the artifact URL in the triggered repo so it pulls directly from the hwapi job from this pipeline
+    ESNET_SMARTNIC_FWAPI_URL: "$CI_PROJECT_URL/-/jobs/$SN_FW_API_JOB_NUMBER/artifacts/download?file_type=archive"
+  rules:
+    - if: ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH) && ($SN_HW_APP_NAME == $SN_FW_APP_NAME)
+    - if: ($CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH) && ($SN_HW_APP_NAME == $SN_FW_APP_NAME)
+      when: manual
+      allow_failure: true
+
+trigger_ht_sw:
+  extends: .trigger_sw
+  variables:
+    SN_FW_APP_NAME: esnet-smartnic-ht
+    SN_FW_API_JOB: package_focal
+  trigger:
+    project: ht/hightouch-xilinx
+    branch: main
+  needs:
+    - package_focal

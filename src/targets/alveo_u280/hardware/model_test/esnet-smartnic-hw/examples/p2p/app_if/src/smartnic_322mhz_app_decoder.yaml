@@ -1,0 +1,11 @@
+name: smartnic_322mhz_app
+
+decoders:
+  p2p_decoder: &p2p_decoder
+    !include ../examples/p2p/src/p2p/regio/p2p_decoder.yaml
+
+interfaces:
+  - decoder: *p2p_decoder
+    address: 0x00000
+    width: 18
+    name: p2p

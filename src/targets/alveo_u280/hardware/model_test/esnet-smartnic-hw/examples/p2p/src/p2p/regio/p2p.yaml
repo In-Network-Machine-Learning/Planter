@@ -1,0 +1,23 @@
+name: p2p
+info: |
+  p2p is the top level module for the p2p application core used on the esnet smart nic platform.
+
+regs:
+  - default:
+      width  : 32
+      access : ro
+      init   : 0
+
+  - name: status_upper
+    init: 0xbabeface
+
+  - name: status_lower
+    init: 0xcafebeef
+
+  - name: timestamp_rd_latch
+    desc   : timestamp read latch trigger.  Full 64-bit timestamp value is loaded atomically into timestamp latch when the rd_latch write event occurs.
+    access : wr_evt
+
+  - name: tpause
+    desc   : tpause enable register.  when set to 1, deasserts (overrides) tready on the switch_to_core axi4s interface. 
+    access : rw

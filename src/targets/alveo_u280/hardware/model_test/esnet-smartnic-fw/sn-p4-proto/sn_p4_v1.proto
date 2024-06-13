@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message ClearOneTableRequest {
+  string table_name = 1;
+}
+
+message ClearResponse {
+  int32 error_code = 1;
+  string error_detail = 2;
+}
+
+message PipelineInfo {
+  message TableInfo {
+    enum Endian {
+      ENDIAN_UNSPECIFIED = 0;
+      LITTLE = 1;
+      BIG = 2;
+    }
+
+    message MatchSpec {
+      enum MatchType {
+        MATCH_TYPE_UNSPECIFIED = 0;
+        BITFIELD = 1;
+        CONSTANT = 2;
+        PREFIX   = 3;
+        RANGE    = 4;
+        TERNARY  = 5;
+        UNUSED   = 6;
+      }
+
+      MatchType type = 1;
+      uint32 bits = 2;
+    }
+
+    message ActionSpec {
+      message ParameterSpec {
+        string name = 1;
+        uint32 bits = 2;
+      }
+
+      string name = 1;
+      repeated ParameterSpec parameter_specs = 2;
+    }
+
+    string name = 1;
+    Endian endian = 2;
+    repeated MatchSpec match_specs = 3;
+    repeated ActionSpec action_specs = 4;
+
+    uint32 num_masks = 5;
+
+    bool priority_required = 6;
+    uint32 priority_bits = 7;
+  }
+
+  repeated TableInfo tables = 1;
+}
+
+message Match {
+  message KeyMask {
+    string key = 1;
+    string mask = 2;
+  }
+  message KeyOnly {
+    string key = 1;
+  }
+  message Prefix {
+    string key = 1;
+    uint32 prefix_len = 2;
+  }
+  message Range {
+    uint32 lower = 1;
+    uint32 upper = 2;
+  }
+  message Unused {
+  }
+  oneof match {
+    KeyMask key_mask = 1;
+    KeyOnly key_only = 2;
+    Prefix  prefix = 3;
+    Range   range = 4;
+    Unused  unused = 5;
+  }
+}
+
+message Param {
+  string value = 1;
+}
+
+message MatchActionRule {
+  string table_name = 1;
+  repeated Match matches = 2;
+
+  string action_name = 3;
+  repeated Param params = 4;
+
+  uint32 priority = 5;
+
+  bool replace = 6;
+}
+
+message MatchOnlyRule {
+  string table_name = 1;
+  repeated Match matches = 2;
+}
+
+message RuleOperationResponse {
+  int32 error_code = 1;
+  string error_detail = 2;
+}
+
+service SmartnicP4 {
+  rpc GetPipelineInfo(google.protobuf.Empty) returns (PipelineInfo);
+
+  rpc ClearAllTables(google.protobuf.Empty) returns (ClearResponse);
+  rpc ClearOneTable(ClearOneTableRequest) returns (ClearResponse);
+
+  rpc InsertRule(MatchActionRule) returns (RuleOperationResponse);
+  rpc DeleteRule(MatchOnlyRule) returns (RuleOperationResponse);
+}

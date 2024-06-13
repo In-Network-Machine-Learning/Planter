@@ -1,0 +1,1 @@
+This folder contains Planter-supported xsa architecture module [Link](https://docs.amd.com/r/en-US/ug1393-vitis-application-acceleration/Understanding-an-FPGA-Architecture). Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

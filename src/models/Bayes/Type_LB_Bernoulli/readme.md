@@ -1,0 +1,1 @@
+This folder contains Planter-supported ML modules (training, algortihm mapping, and ML-related P4 generation) for Bayes. ```dedicated_p4.py``` generates the P4 code dedicated to this ML model and ```table_generator.py``` generate ML model parameters in the format of table enries. Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

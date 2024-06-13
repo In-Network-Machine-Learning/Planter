@@ -1,0 +1,1 @@
+This folder contains all Planter-generated M/A table entries. Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

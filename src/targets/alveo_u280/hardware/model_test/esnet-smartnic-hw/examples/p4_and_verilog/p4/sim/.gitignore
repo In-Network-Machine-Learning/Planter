@@ -1,0 +1,11 @@
+*_out.meta
+*_out.pcap
+*_out.pcap.txt
+*_out_final.pcap
+runsim.txt_*
+sim-out.txt
+!test-*/expected/*_out.meta
+!test-*/expected/*_out.pcap
+*/log_*
+run_pkt_test_incl.svh
+

@@ -1,0 +1,38 @@
+*.backup.jou
+*.backup.log
+vivado*.jou
+vivado*.log
+vivado_*.str
+P4Test_vivado/
+p4prog_with_truncate/
+old/
+zips/
+xvlog.pb
+hs_err_pid*.log
+webtalk*.log
+webtalk*.jou
+
+# Xilinx             #
+######################
+# Precompiled libraries
+*.sdb
+*.rlx
+
+
+# Simulation
+**/lib/sub.libs
+**/lib/compile*.log
+**/lib/compile*.sh
+**/run_[0-9]*/
+.sim_waves.tcl
+**/tests*/*/*.wcfg
+
+# Synthesis
+*.dcp
+*.rpt
+
+**/.Xil
+
+# SVUnit             #
+######################
+**/.svunit

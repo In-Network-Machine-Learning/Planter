@@ -1,0 +1,11 @@
+name: p2p
+
+blocks:
+  p2p: &p2p
+    !include ../examples/p2p/src/p2p/regio/p2p.yaml
+
+interfaces:
+  - block: *p2p
+    address: 0x0000
+    width: 12
+    name: p2p

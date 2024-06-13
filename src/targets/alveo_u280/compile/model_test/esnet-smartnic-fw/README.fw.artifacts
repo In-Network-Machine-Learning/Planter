@@ -1,0 +1,106 @@
+====================
+  Run time package
+====================
+
+This firmware (FW) runtime package is built on top of the hardware (HW) artifact produced by the FPGA build.
+
+$ dpkg-deb --fsys-tarfile esnet-smartnic1_1.0.0-13540_amd64.deb | tar tf - | tree --fromfile 
+.
+└── .
+    └── usr
+        ├── bin
+        │   └── sn-cli   <------------------------------- tool used to inspect the loaded FPGA and to insert p4bm formatted rules into the p4/sdnet tables
+        ├── lib
+        │   ├── firmware
+        │   │   └── esnet-smartnic
+        │   │       ├── esnet-smartnic.bit   <----------- bitfile to be loaded into the FPGA
+        │   │       └── esnet-smartnic.p4    <----------- original p4 program used in this FPGA load (informational only)
+        │   └── x86_64-linux-gnu
+        │       ├── libopennic.so.1   <------------------ helper library for accessing common opennic shell blocks
+        │       ├── libsdnetapi.so.1   <----------------- helper library for accessing sdnet device/table functions
+        │       ├── libsnutil.so.1   <------------------- helper library for accessing esnet-smartnic platform blocks
+        │       └── wireshark
+        │           └── plugins
+        │               └── hightouch-telemetry.lua   <-- wireshark/tshark plugin for hightouch protocol headers (useful for decoding pcap files)
+        └── share
+            ├── doc
+            │   └── esnet-smartnic1
+            │       ├── changelog.Debian.gz
+            │       └── copyright
+            └── esnet-smartnic
+                └── esnet-smartnic-top-ir.yaml   <------- PCIe register map definition used to directly read/write registers for debug using regio tool
+
+13 directories, 10 files
+
+======================
+  Build time package
+======================
+
+This package only needs to be installed on the software (SW) build system.  This does NOT need to be installed at runtime.
+
+$ dpkg-deb --fsys-tarfile esnet-smartnic-dev_1.0.0-13540_amd64.deb | tar tf - | tree --fromfile 
+.
+└── .
+    └── usr
+        ├── include
+        │   └── esnet-smartnic   <--------------------------- include files for block-level registers and other helper functions
+        │       ├── array_size.h
+        │       ├── axi4s_probe_block.h
+        │       ├── cmac.h
+        │       ├── cmac_adapter_block.h
+        │       ├── cmac_block.h
+        │       ├── dict_block.h
+        │       ├── esnet_smartnic_toplevel.h   <------------ include file that defines the PCIe regmap top-level overlay struct
+        │       ├── ht_app_block.h
+        │       ├── ht_app_flowexporter_block.h
+        │       ├── ht_app_flowprocessor_block.h
+        │       ├── memory-barriers.h
+        │       ├── pktgen_block.h
+        │       ├── qdma_device_csrs_block.h
+        │       ├── qdma_device_queues_block.h
+        │       ├── qdma_function_block.h
+        │       ├── qdma_subsystem_block.h
+        │       ├── qsfp28_i2c_block.h
+        │       ├── reg_endian_check_block.h
+        │       ├── sdnet_block.h
+        │       ├── sdnetapi.h
+        │       ├── smartnic.h
+        │       ├── smartnic_322mhz_block.h
+        │       ├── syscfg_block.h
+        │       ├── sysmon.h
+        │       ├── sysmon_block.h
+        │       └── unused.h
+        ├── lib
+        │   └── x86_64-linux-gnu   <------------------------- these are actually symlinks to the .so, not the actual .so files
+        │       ├── libopennic.so
+        │       ├── libsdnetapi.so
+        │       ├── libsnutil.so
+        │       └── pkgconfig   <---------------------------- pkg-config files to auto-discover define compile flags for libs during compiles
+        │           ├── opennic.pc
+        │           ├── sdnetapi.pc
+        │           └── snutil.pc
+        └── share
+            ├── doc
+            │   └── esnet-smartnic-dev
+            │       ├── changelog.Debian.gz
+            │       └── copyright
+            └── esnet-smartnic-dev
+                └── spec   <--------------------------------- original user-written yaml definitions for registers within blocks/decoders (informational only)
+                    ├── box0_250mhz_decoder.yaml
+                    ├── box1_322mhz_decoder.yaml
+                    ├── cmac.yaml
+                    ├── cmac_adapter.yaml
+                    ├── cmac_decoder.yaml
+                    ├── esnet-smartnic-top.yaml
+                    ├── qdma_decoder.yaml
+                    ├── qdma_device_csrs.yaml
+                    ├── qdma_device_queues.yaml
+                    ├── qdma_function.yaml
+                    ├── qdma_pf_decoder.yaml
+                    ├── qdma_subsystem.yaml
+                    ├── qsfp28_i2c.yaml
+                    ├── syscfg.yaml
+                    ├── sysmon.yaml
+                    └── sysmon_decoder.yaml
+
+12 directories, 50 files

@@ -1,0 +1,7 @@
+usr/lib/*/lib*.so.*
+usr/lib/*/wireshark/plugins/*
+usr/share/esnet-smartnic/**
+usr/bin/regio
+usr/bin/sn-cli
+usr/bin/sn-p4-agent
+usr/bin/sn-p4-cli

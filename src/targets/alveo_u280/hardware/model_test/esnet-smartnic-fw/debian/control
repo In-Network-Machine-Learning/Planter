@@ -1,0 +1,31 @@
+Source: esnet-smartnic
+Priority: optional
+Maintainer: Stacey Sheldon <stac@es.net>
+Build-Depends: debhelper-compat (= 10), ninja-build, python3-click, python3-yaml, python3-jinja2, libgmp-dev, libprotobuf-dev, libgrpc++-dev, libgrpc++1, protobuf-compiler, protobuf-compiler-grpc, pkg-config
+Standards-Version: 4.4.1
+Section: libs
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/esnet-smartnic
+#Vcs-Git: https://salsa.debian.org/debian/esnet-smartnic.git
+
+Package: esnet-smartnic-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: esnet-smartnic1 (= ${binary:Version}), ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
+
+Package: esnet-smartnic1
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
+
+Package: esnet-smartnic-hw
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

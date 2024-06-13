@@ -1,0 +1,27 @@
+# Makefile artifacts
+.proj_created
+.sim_targets_generated
+.synth_targets_generated
+.sdnet_ex_design_generated
+
+# Vivado project files
+**/proj/*
+*.jou
+*.str
+*.log
+
+# Generated IP source files
+**/ip_user_files/*
+
+# Sim artifacts
+**/lib/*
+*.pb
+
+# Ignore everything in IP directories except xci and file lists
+*/*
+!*/*.xci
+!*/sources.f
+!*/*.p4
+
+# SDNet xci is created from a script, not checked in
+sdnet_*/sdnet_*.xci

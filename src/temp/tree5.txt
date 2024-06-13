@@ -1,0 +1,10 @@
+fAA = [];
+fAB = [];
+fAC = [49, 50];
+fAD = [7, 16, 17];
+ when fAD<=7.0  then 0;
+ when fAD>7.0 and fAC<=49.5 and fAD<=16.5  then 1;
+ when fAD>7.0 and fAC<=49.5 and fAD>16.5  then 2;
+ when fAD>7.0 and fAC>49.5 and fAD>17.0  then 2;
+ when fAD>7.0 and fAC>49.5 and fAD<=17.0 and fAC<=50.5  then 2;
+ when fAD>7.0 and fAC>49.5 and fAD<=17.0 and fAC>50.5  then 1;

@@ -1,0 +1,11 @@
+name: smartnic_322mhz_app
+
+decoders:
+  p4_and_verilog_decoder: &p4_and_verilog_decoder
+    !include ../examples/p4_and_verilog/src/p4_and_verilog/regio/p4_and_verilog_decoder.yaml
+
+interfaces:
+  - decoder: *p4_and_verilog_decoder
+    address: 0x00000
+    width: 18
+    name: p4_and_verilog

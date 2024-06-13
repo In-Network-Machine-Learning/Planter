@@ -1,0 +1,10 @@
+deb http://linux.mirrors.es.net/ubuntu focal main restricted
+deb http://linux.mirrors.es.net/ubuntu focal-updates main restricted
+deb http://linux.mirrors.es.net/ubuntu focal universe
+deb http://linux.mirrors.es.net/ubuntu focal-updates universe
+deb http://linux.mirrors.es.net/ubuntu focal multiverse
+deb http://linux.mirrors.es.net/ubuntu focal-updates multiverse
+deb http://linux.mirrors.es.net/ubuntu focal-backports main restricted universe multiverse
+deb http://linux.mirrors.es.net/ubuntu focal-security main restricted
+deb http://linux.mirrors.es.net/ubuntu focal-security universe
+deb http://linux.mirrors.es.net/ubuntu focal-security multiverse

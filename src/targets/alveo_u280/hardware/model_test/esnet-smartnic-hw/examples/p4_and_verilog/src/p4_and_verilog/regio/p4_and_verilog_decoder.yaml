@@ -1,0 +1,11 @@
+name: p4_and_verilog
+
+blocks:
+  p4_and_verilog: &p4_and_verilog
+    !include ../examples/p4_and_verilog/src/p4_and_verilog/regio/p4_and_verilog.yaml
+
+interfaces:
+  - block: *p4_and_verilog
+    address: 0x0000
+    width: 12
+    name: p4_and_verilog

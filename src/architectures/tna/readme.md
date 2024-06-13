@@ -1,0 +1,1 @@
+This folder contains Planter-supported TNA architecture module [Link](https://opennetworking.org/wp-content/uploads/2021/05/2021-P4-WS-Vladimir-Gurevich-Slides.pdf). Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

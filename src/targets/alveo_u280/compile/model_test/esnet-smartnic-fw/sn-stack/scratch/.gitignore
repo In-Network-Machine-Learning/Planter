@@ -1,0 +1,9 @@
+# ignore everything
+*
+
+# except these files
+!.gitignore
+!.dockerignore
+
+# even if they are in subdirectories
+!*/

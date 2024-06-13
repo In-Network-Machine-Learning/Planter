@@ -1,0 +1,17 @@
+no_cuda: False
+checkpoint: "results/bnn_caffenet_cifar10" 
+filename: null
+pretrained: null
+bin_type: 'bnn'
+
+model : "bnn_caffenet"
+save_path: "results/bnn_caffenet_cifar10" 
+dataset : "cifar10"
+batch_size: 128 
+test_batch_size: 100
+optimizer: 'sgd' 
+lr: 0.01 
+gamma: 0.1 
+steps: [80, 150] 
+epochs: 300 
+
