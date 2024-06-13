@@ -1,12 +1,12 @@
 # Planter
 ![Planter Logo](src/images/logo.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![GitHub release](https://img.shields.io/badge/pre--release%20tag-v0.2.0-orange)
+![GitHub release](https://img.shields.io/badge/release%20tag-v0.1.0-orange)
 
 ## Introducing Planter
 Planter is a modular framework for realizing one-click in-network machine learning algorithms. All you need to provide to Planter are a configuration file (```Name_data.py```) and a dataset. Planter will take it from there and offload your machine learning classification task into a programmable data plane. This is the artifact for the paper "Planter: Rapid Prototyping of In-Network Machine Learning Inference" in SIGCOMM CCR (with early [arXiv](https://arxiv.org/pdf/2205.08824.pdf) version named "Automating In-Network Machine Learning".) 
 
-💡 **Please check Planter's user document** [PDF](./Docs/Planter_User_Document_v0.0.1.pdf) (strongly recommended). 
+💡 **Please check Planter's user document** [PDF](./Docs/Planter_User_Document_v0.1.0.pdf) (strongly recommended). 
 
 ## Setting up the Planter environment <span id = "environment"></span>
 
