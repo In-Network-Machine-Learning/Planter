@@ -156,11 +156,15 @@ def common_parser(fname, config):
                      "            default: accept;\n"
                      "        }\n"
                      "    }\n\n"
-                     "    state parse_Planter {\n"
-                     "        pkt.extract(hdr.Planter);\n"
-                     "        transition accept;\n"
-                     "    }\n\n"
-                     "    state parse_ipv4 {\n"
+                   "  state parse_Planter {\n" 
+                     "        pkt.extract(hdr.Planter);\n")
+        for f in range(0, config['num_features']):
+            parser.write("        meta.feature" + str(f) + " = hdr.Planter.feature" + str(f) + ";\n")
+        parser.write("        meta.flag = 1 ;\n")
+
+        parser.write("        transition accept;\n" 
+                     "    }\n")
+        parser.write("state parse_ipv4 {\n"
                      "        pkt.extract(hdr.ipv4);\n"
                      "        meta.feature2 =  (bit <32>) hdr.ipv4.protocol;\n"
                      "        meta.srcip = (bit<32>) hdr.ipv4.src_addr;\n"
