@@ -131,14 +131,14 @@ def separate_tables(fname, config):
 
 
         ingress.write("    table thresh_and_bias {\n"
-                      "        key = {hdr.Planter.ver:exact;}\n"
+                      "        key = {hdr.Plante=.ver:exact;}\n"
                       "        actions={read_thresh_and_bias; NoAction;}\n"
                       "        default_action = NoAction;\n"
                       "        size = 1;\n"
                       "    }\n\n")
 
         ingress.write("    action read_lable(bit<32> label){\n"
-                      "        hdr.Planter.result = label;\n"
+                      "        meta.result = label;\n"
                       "    }\n\n")
 
         ingress.write("    table decision {\n"
@@ -195,7 +195,7 @@ def create_tables(Planter_config):
             Entry = {}
             Entry["table"] = "SwitchIngress.lookup_feature"+str(f)
             Entry["match"] = {}
-            Entry["match"]["hdr.Planter.feature"+str(f)] = key_value
+            Entry["match"]["meta.feature"+str(f)] = key_value
             Entry["action_name"] = "SwitchIngress.extract_feature"+str(f)
             Entry["action_params"] = {}
             for hp in range(num_hps):

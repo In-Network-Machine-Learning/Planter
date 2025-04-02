@@ -106,7 +106,7 @@ def separate_tables(fname, config):
         for i in range(0, config['num_features']):
             ingress.write("    @pragma stage 0\n")
             ingress.write("    table lookup_feature" + str(i) + " {\n" \
-                     "        key = { hdr.Planter.feature" + str(i) + ":ternary; }\n" \
+                     "        key = { meta.feature" + str(i) + ":ternary; }\n" \
                      "        actions = {\n" \
                      "            extract_feature" + str(i) + "(meta.code_f" + str(i) + ");\n" \
                      "            NoAction;\n" \
@@ -148,10 +148,10 @@ def separate_tables(fname, config):
                           "    }\n\n")
 
         ingress.write("    action read_lable(bit<32> label){\n"  
-                      "        hdr.Planter.result = label;\n"  
+                      "        meta.result = label;\n"  
                       "    }\n\n")
         ingress.write("    action write_default_decision() {\n"
-                      "        hdr.Planter.result = " + str( config['default label']) + ";\n"
+                      "        meta.result = " + str( config['default label']) + ";\n"
                       "    }\n\n")
         ingress.write("    table decision {\n        key = { ")
         for t in range(config['num_trees']):

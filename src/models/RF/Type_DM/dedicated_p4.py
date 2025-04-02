@@ -139,10 +139,10 @@ def separate_tables(fname, config):
 
 
         ingress.write("    action read_lable(bit<32> label){\n"  
-                      "        hdr.Planter.result = label;\n"  
+                      "        meta.result = label;\n"  
                       "    }\n\n")
         ingress.write("    action write_default_decision() {\n" 
-                      "        hdr.Planter.result = " + str( config['default label']) + ";\n"
+                      "        meta.result = " + str( config['default label']) + ";\n"
                       "    }\n\n")
         ingress.write("    table decision {\n        key = { ")
         for t in range(config['num_trees']):

@@ -97,13 +97,13 @@ def separate_tables(fname, config):
                                                                   "    }\n\n")
 
         ingress.write("    action read_lable(bit<32> label){\n" \
-                      "        hdr.Planter.result = label;\n" \
+                      "        meta.result = label;\n" \
                       "    }\n\n")
 
         for i in range(0, config['num_features']):
             ingress.write("    @pragma stage 0\n")
             ingress.write("    table lookup_feature" + str(i) + " {\n" \
-                     "        key = { hdr.Planter.feature" + str(i) + ":ternary; }\n" \
+                     "        key = { meta.feature" + str(i) + ":ternary; }\n" \
                      "        actions = {\n" \
                      "            extract_feature" + str(i) + "(meta.code_f" + str(i) + ");\n" \
                      "            NoAction;\n" \
@@ -114,7 +114,7 @@ def separate_tables(fname, config):
 
 
         ingress.write("    action write_default_class() {\n"
-                      "        hdr.Planter.result = " + str(config['default_lable']) + ";\n"
+                      "        meta.result = " + str(config['default_lable']) + ";\n"
                       "    }\n\n")
 
         count_code = {}
@@ -167,8 +167,8 @@ def create_tables(Planter_config):
             Entry = {}
             Entry["table"] = "SwitchIngress.lookup_feature"+str(f)
             Entry["match"] = {}
-            Entry["match"]["hdr.Planter.feature" + str(f)] = {}
-            Entry["match"]["hdr.Planter.feature"+str(f)] = [key, mask]
+            Entry["match"]["meta.feature" + str(f)] = {}
+            Entry["match"]["meta.feature"+str(f)] = [key, mask]
             Entry["action_name"] = "SwitchIngress.extract_feature"+str(f)
             Entry["action_params"] = {}
             Entry["action_params"]["tree"] = int(label)

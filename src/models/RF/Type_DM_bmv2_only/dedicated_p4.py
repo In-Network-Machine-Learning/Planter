@@ -106,7 +106,7 @@ def separate_tables(fname, config):
                       "        bit<16> f = f_inout ;\n")
         for f in range(0, config['num_features']):
             ingress.write("        if (f == "+str(f)+") {\n"
-                          "            feature = hdr.Planter.feature"+str(f)+";\n"
+                          "            feature = meta.feature"+str(f)+";\n"
                           "        }\n")
         ingress.write("        bit<32> th = threshold - feature;\n"
                       # "        if (feature <= th){\n" # if (feature <= th){
@@ -145,10 +145,10 @@ def separate_tables(fname, config):
 
 
         ingress.write("    action read_lable(bit<32> label){\n"  
-                      "        hdr.Planter.result = label;\n"  
+                      "        meta.result = label;\n"  
                       "    }\n\n")
         ingress.write("    action write_default_decision() {\n" 
-                      "        hdr.Planter.result = " + str( config['default label']) + ";\n"
+                      "        meta.result = " + str( config['default label']) + ";\n"
                       "    }\n\n")
         ingress.write("    table decision {\n        key = { ")
         for t in range(config['num_trees']):

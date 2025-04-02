@@ -74,14 +74,14 @@ def separate_tables(fname, config):
     with open(fname, 'a') as ingress:
 
         ingress.write("    action extract_label(bit<16> label){\n"
-                      "        hdr.Planter.result = (bit<32>) label;\n"
+                      "        meta.result = (bit<32>) label;\n"
                       "    }\n\n")
 
 
 
 
         ingress.write("    table lookup_clustream {\n"
-                 "        key = { hdr.Planter.feature0:ternary; }\n"
+                 "        key = { meta.feature0:ternary; }\n"
                  "        actions = {\n"
                  "            extract_label();\n"
                  "            NoAction;\n"

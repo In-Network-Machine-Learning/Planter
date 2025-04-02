@@ -38,7 +38,7 @@ def write_compare(c_n, con_list, num_class, txt):
 
 def do_compare(c_n, con_list, num_class, txt, label, config):
     if c_n == num_class-1:
-        txt.write("         "+c_n*"    "+"hdr.Planter.result = "+str(int(label))+";\n"
+        txt.write("         "+c_n*"    "+"meta.result = "+str(int(label))+";\n"
                   "         "+(c_n-1)*"    "+"}\n")
         return
     else:
@@ -271,9 +271,9 @@ def separate_tables(fname, config):
         ingress.write("    action BuildInput(){\n")
         for f in range(config['num_features']):
             if f+1<config['num_features']:
-                ingress.write("        meta.bnnInput = (meta.bnnInput + (bit <64>) hdr.Planter.feature"+str(f)+") << "+str(np.int(config['width'][f+1]))+";\n")
+                ingress.write("        meta.bnnInput = (meta.bnnInput + (bit <64>) meta.feature"+str(f)+") << "+str(np.int(config['width'][f+1]))+";\n")
             else:
-                ingress.write("        meta.bnnInput = (meta.bnnInput + (bit <64>) hdr.Planter.feature" + str(f) + ") ;\n")
+                ingress.write("        meta.bnnInput = (meta.bnnInput + (bit <64>) meta.feature" + str(f) + ") ;\n")
 
         ingress.write("    }\n\n")
 

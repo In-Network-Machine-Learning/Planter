@@ -99,7 +99,7 @@ def separate_tables(fname, config):
 
         for f in range(0, config['num_features']):
             ingress.write("    table lookup_feature" + str(f) + " {\n"
-                     "        key = { hdr.Planter.feature" + str(f) + ":exact; }\n"
+                     "        key = { meta.feature" + str(f) + ":exact; }\n"
                      "        actions = {\n"
                      "            extract_feature" + str(f) + "();\n"
                      "            NoAction;\n"
@@ -111,7 +111,7 @@ def separate_tables(fname, config):
 
         ingress.write("    action wrap_back( ){\n")
         for ax in range(0, config['num_axis']):
-            ingress.write("        hdr.Planter.feature"+str(ax)+" = meta.middle_ax" + str(ax) + ";\n")
+            ingress.write("        meta.feature"+str(ax)+" = meta.middle_ax" + str(ax) + ";\n")
         ingress.write("    }\n\n")
 
 
@@ -153,7 +153,7 @@ def create_tables(Planter_config):
             Entry = {}
             Entry["table"] = "SwitchIngress.lookup_feature" + str(f)
             Entry["match"] = {}
-            Entry["match"]["hdr.Planter.feature" + str(f)] = key_value
+            Entry["match"]["meta.feature" + str(f)] = key_value
             Entry["action_name"] = "SwitchIngress.extract_feature" + str(f)
             Entry["action_params"] = {}
             for ax in range(num_components):

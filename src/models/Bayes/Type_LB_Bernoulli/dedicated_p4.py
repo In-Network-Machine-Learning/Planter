@@ -94,7 +94,7 @@ def separate_tables(fname, config):
 
         for f in range(0, config['num_features']):
             ingress.write("    table lookup_feature" + str(f) + " {\n"
-                     "        key = { hdr.Planter.feature" + str(f) + ":exact; }\n"
+                     "        key = { meta.feature" + str(f) + ":exact; }\n"
                      "        actions = {\n"
                      "            extract_feature" + str(f) + "();\n"
                      "            NoAction;\n"
@@ -154,7 +154,7 @@ def write_compare(c_n, con_list, num_class, txt):
 
 def do_compare(c_n, con_list, num_class, txt, label, config):
     if c_n == num_class-1:
-        txt.write("         "+c_n*"    "+"hdr.Planter.result = "+str(np.int(label))+";\n"
+        txt.write("         "+c_n*"    "+"meta.result = "+str(np.int(label))+";\n"
                   "         "+(c_n-1)*"    "+"}\n")
         return
     else:
@@ -215,7 +215,7 @@ def create_tables(Planter_config):
             Entry = {}
             Entry["table"] = "SwitchIngress.lookup_feature"+str(f)
             Entry["match"] = {}
-            Entry["match"]["hdr.Planter.feature"+str(f)] = key_value
+            Entry["match"]["meta.feature"+str(f)] = key_value
             Entry["action_name"] = "SwitchIngress.extract_feature"+str(f)
             Entry["action_params"] = {}
             for c in range(num_classes):
