@@ -2,7 +2,7 @@ name: smartnic_322mhz_app
 
 decoders:
   p2p_decoder: &p2p_decoder
-    !include ../examples/p2p/src/p2p/regio/p2p_decoder.yaml
+    !include ../examples/p2p/src/p2p/region/p2p_decoder.yaml
 
 interfaces:
   - decoder: *p2p_decoder

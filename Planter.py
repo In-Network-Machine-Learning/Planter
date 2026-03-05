@@ -27,7 +27,7 @@ import signal
 warnings.filterwarnings('ignore')
 
 # =================== import Planter src ===================
-# funtions
+# functions
 from src.functions.figure_to_ASCII import *
 from src.functions.json_encoder import *
 from src.functions.project_tree_graph import *
@@ -45,12 +45,12 @@ def Planter(iteration = 0):
 
     # =================== set argparse for Planter ===================
 
-    parser = argparse.ArgumentParser(prog="Please use commend '-h' or '--help' for further information",
+    parser = argparse.ArgumentParser(prog="Please use command '-h' or '--help' for further information",
                                 usage='Planter can embed several ML algorithms to programmable network devices',
                                 description='It is a on going work, if you find any bugs, please feel free to contact changgang.zheng@eng.ox.ac.uk, it is really important to us. Thank you.',
                                 epilog='Play happy with Planter ~')
     parser.add_argument("-m", "--manually_config", help="Manually config Planter or not? If not set, please config the following file <src/config/Planter_config.json>. If set, the Planter will ask you to input all the necessary configs.", action="store_true")
-    parser.add_argument("-o", "--auto_optimisation", help="Use auto hyperparameters tunning or not? If set, the Planter will trigger auto optimisation process. Please do not use this mode with other modes, Planter will handle everything.", action="store_true")
+    parser.add_argument("-o", "--auto_optimisation", help="Use auto hyperparameters tuning or not? If set, the Planter will trigger auto optimisation process. Please do not use this mode with other modes, Planter will handle everything.", action="store_true")
     parser.add_argument("-t", "--testing_mode", help="Use testing mode or not? If set, the testing mode will only use at most 20000 input data and 5000 testing data.", action="store_true")
     parser.add_argument("-d", "--draw_project_tree", help="Draw the project tree or not? If set, this mode will output a tree graph of the Planter project.", action="store_true")
     parser.add_argument("-f", "--draw_function_call_graph", help="Draw function calling dependency graph or not, if set, after running Planter, a function calling dependency graph will be generated under <src/logs>.", action="store_true")
@@ -147,19 +147,19 @@ def Planter(iteration = 0):
         round = 0
         while True:
             round += 1
-            # call the function to find best paraemters and generate the config file
+            # call the function to find best parameters and generate the config file
             main_functions.config_generator(args, round)
-            # call Plantrer to verify the generated configs
-            print('= Begin varifcation for the generated configs. Rounds', round)
+            # call Planter to verify the generated configs
+            print('= Begin verification for the generated configs. Rounds', round)
             args.manually_config = False
             Planter(round)
             # reload the config file
             Planter_config = reload_config('src/configs/Planter_config.json')
             if Planter_config['optimisation config']['compile result'] == 'y':
-                print('= Verification seccess. Data plane and control plane codes are generated with best hyperparameters.')
+                print('= Verification success. Data plane and control plane codes are generated with best hyperparameters.')
                 break
             else:
-                print('= Verification fales. Regenerate configs with higher constrained configs')
+                print('= Verification fails. Regenerate configs with higher constrained configs')
         exit()
     # =================== auto config mode config and operations finished ===================
     # print('= args:', args)

@@ -65,7 +65,7 @@ def get_lineage(tree, feature_names, file):
             else:
                 sign = g
             clause = clause + i[3] + sign + str(i[2]) + ' and '
-        # wirte the node information into text file
+        # write the node information into text file
         # print(node)
         ind = n_node_samples[node]
         clause = clause[:-4] + ' then ' + str(ind)
@@ -147,11 +147,11 @@ def generate_feature_tables(split, num_features,feature_max, table):
     for i in range(num_features):
         table["feature "+str(i)] = {}
         count_code = 0
-        nife = sorted(split["feature "+str(i)])
+        knife = sorted(split["feature "+str(i)])
         for j in range(feature_max[i]+1):
-            if nife !=[] :
-                if len(nife) > count_code:
-                    if j-1 == nife[count_code]:
+            if knife !=[] :
+                if len(knife) > count_code:
+                    if j-1 == knife[count_code]:
                         count_code+=1
             table["feature " + str(i)][j] = count_code
     return table
@@ -178,7 +178,7 @@ def find_classification(textfile, feature_split, num_features):
             sign.append(re.findall(r"(<=|>)", line))
             num.append(re.findall(r"\d+\.?\d*", line))
     f.close()
-    classfication = []
+    classification = []
     featuren = {}
     for i in range(len(fea)):
         num_nodes = 0
@@ -205,16 +205,16 @@ def find_classification(textfile, feature_split, num_features):
         for l in range(num_features):
             feature_n[l].append(featuren[l])
         a = len(num[i])
-        classfication.append(num_nodes)
+        classification.append(num_nodes)
 
-    return feature_n, classfication
+    return feature_n, classification
 
 
-def find_path_for_leaf_nodes(feature_n, classfication, num_features):
+def find_path_for_leaf_nodes(feature_n, classification, num_features):
     path_to_leaf = {}
-    for i in range(len(classfication)):
+    for i in range(len(classification)):
         path_to_leaf["path "+str(i)] = {}
-        path_to_leaf["path " + str(i)]["leaf"] = classfication[i]
+        path_to_leaf["path " + str(i)]["leaf"] = classification[i]
         for j in range(num_features):
             path_to_leaf["path " + str(i)]["feature "+str(j)] = feature_n[j][i]
     return path_to_leaf
@@ -251,16 +251,16 @@ def generate_table(model, tree_index, num_features, g_table, feature_max, leaf_i
     g_table[tree_index] = {}
     g_table[tree_index] = generate_feature_tables(feature_split, num_features, feature_max, g_table[tree_index])
     
-    feature_n, classfication = find_classification(textfile, feature_split , num_features)
-    path_to_leaf = find_path_for_leaf_nodes(feature_n, classfication, num_features)
+    feature_n, classification = find_classification(textfile, feature_split , num_features)
+    path_to_leaf = find_path_for_leaf_nodes(feature_n, classification, num_features)
     code_width_for_feature = np.zeros(num_features)
     for i in range(num_features):
         code_width_for_feature[i] = int(np.ceil(math.log(g_table[tree_index]['feature ' + str(i)][np.max(list(g_table[tree_index]['feature ' + str(i)].keys()))]+1,2))) or 1
     g_table[tree_index] = generate_code_table(g_table[tree_index], path_to_leaf, num_features)
     
-    # print(classfication)
+    # print(classification)
     print('\rThe table for Tree: {} is generated'.format(tree_index), end="")
-    leaf_info['tree '+str(tree_index)]= np.unique(classfication)
+    leaf_info['tree '+str(tree_index)]= np.unique(classification)
     return g_table, leaf_info
 
 
@@ -471,7 +471,7 @@ def test_tables(sklearn_test_y, test_X, test_y):
     LPM_Table = json.load(open('Tables/LPM_Table.json', 'r'))
     Exact_Table = json.load(open('Tables/Exact_Table.json', 'r'))
 
-    print('Test the exact feature table, extact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
+    print('Test the exact feature table, exact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
     same = 0
     correct = 0
     error = 0

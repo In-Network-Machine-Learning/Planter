@@ -66,7 +66,7 @@ Installing prerequisites for the ESnet SmartNIC hardware repository (for esnet-s
 cd Planter/src/targets/alveo_u280/hardware/model_test/esnet-smartnic-hw
 git submodule update --init --recursive
 sudo apt install python3-yaml python3-jinja2 python3-click
-pip3 install -r esnet-fpga-library/tools/regio/requirements.txt
+pip3 install -r esnet-fpga-library/tools/region/requirements.txt
 ```
 
 Installing and Configuring the Vivado Runtime Environment (for esnet-smartnic-hw)

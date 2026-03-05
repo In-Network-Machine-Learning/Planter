@@ -39,7 +39,7 @@ SRC_LIST_FILES = $(SVUNIT_SRC_LIST_FILE)
 #   (see $SCRIPTS_ROOT/Makefiles/dependencies.mk for details)
 # ----------------------------------------------------
 COMPONENTS = p2p.rtl \
-             p2p.regio.verif \
+             p2p.region.verif \
              std.verif@common@smartnic \
              axi4l.rtl@common@smartnic \
              axi4s.rtl@common@smartnic \
