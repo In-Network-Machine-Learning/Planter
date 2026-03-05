@@ -193,11 +193,11 @@ def Table_to_sep_val(table):
             lasat_lable = table[dict]
         if dict == 0:
             Table[dict] = table[dict] # When you get to the end of the for loop, the last value in table and final key is 0
-    #This for-loop selects all feature values at bounderies and puts them in Table
+    #This for-loop selects all feature values at boundaries and puts them in Table
     #For instance if the first 20 actions of the exact match table were 112111112111211121111121 then Table would be 1121212121 in reverse order
     #Selects the value before the value change
 
-    separation_value = list(Table.keys()) #Selects index of seperation values (starting from highest e.g 99,98,86,77,56,29,6,1)
+    separation_value = list(Table.keys()) #Selects index of separation values (starting from highest e.g 99,98,86,77,56,29,6,1)
 
     return separation_value, separation_value_input
 

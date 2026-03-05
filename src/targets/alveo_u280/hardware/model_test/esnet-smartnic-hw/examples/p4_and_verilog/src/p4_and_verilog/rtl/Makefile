@@ -25,7 +25,7 @@ SRC_LIST_FILES =
 #   List IP component and external library dependencies
 #   (see $SCRIPTS_ROOT/Makefiles/dependencies.mk)
 # ----------------------------------------------------
-COMPONENTS = p4_and_verilog.regio.rtl \
+COMPONENTS = p4_and_verilog.region.rtl \
              vitisnetp4.xilinx_ip \
              util.rtl@common@smartnic \
              axi4l.rtl@common@smartnic \

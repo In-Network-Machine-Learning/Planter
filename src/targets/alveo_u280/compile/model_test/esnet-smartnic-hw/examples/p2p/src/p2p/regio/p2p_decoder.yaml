@@ -2,7 +2,7 @@ name: p2p
 
 blocks:
   p2p: &p2p
-    !include ../examples/p2p/src/p2p/regio/p2p.yaml
+    !include ../examples/p2p/src/p2p/region/p2p.yaml
 
 interfaces:
   - block: *p2p
