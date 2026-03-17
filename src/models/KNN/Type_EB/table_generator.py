@@ -206,7 +206,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
 
     feature_min = []
     for i in feature_names:
-        t_t = [test_X[[i]].min()[0], train_X[[i]].min()[0]]
+        t_t = [test_X[[i]].min().iloc[0], train_X[[i]].min().iloc[0]]
         feature_min += [np.min(t_t) ]
     # print(feature_min)
 
