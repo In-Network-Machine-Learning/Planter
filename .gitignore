@@ -116,3 +116,6 @@ cython_debug/
 .idea/
 .ide
 
+
+# DPDK target generated artefacts
+src/targets/dpdk/software/model_test/
