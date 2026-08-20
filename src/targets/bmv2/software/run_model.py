@@ -40,13 +40,16 @@ def add_make_run_model(fname, config):
     work_root, model_test_root, file_name, test_file_name = file_names(config)
     password = config['test config']['sudo password']
     test_command = 'h1 python3 '+work_root+'/src/test/' + test_file_name +'.py'
-    
+
+    architecture = config.get('target config', {}).get('architecture', 'v1model')
+    p4c_override = 'P4C=p4c-bm2-psa ' if architecture == 'psa' else ''
+
     with open(fname, 'w') as command:
         command.write("#!/bin/bash\n")
-        command.write("echo '" + password + "' | sudo -S make clean\n")
+        command.write("echo '" + password + "' | sudo -S make " + p4c_override + "clean\n")
         command.write("rm " + model_test_root + "/*.p4\n")
         command.write("cp "+work_root+"/P4/"+file_name+".p4 " + model_test_root + "/"+file_name+".p4\n")
-        command.write("echo '" + test_command + "' | sudo -S make run\n")
+        command.write("echo '" + test_command + "' | sudo -S make " + p4c_override + "run\n")
     os.chmod(fname, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 
 
