@@ -31,7 +31,16 @@ def create_headers(fname, config):
                      "*************************************************************************/\n\n")
     common_basic_headers(fname, config)
     common_headers(fname, config)
+
+    with open(fname, 'a') as headers:
+        headers.write("struct metadata_t {\n")
     separate_metadata(fname, config)
+    try:
+        common_metadata(fname, config)
+    except Exception as e:
+        pass
+    with open(fname, 'a') as headers:
+        headers.write("}\n\n")
 
 
 
@@ -57,7 +66,9 @@ def create_parser(fname, config):
             "    packet_in pkt,\n"
             "    out header_t hdr,\n"
             "    inout metadata_t meta,\n"
-            "    in psa_ingress_parser_input_metadata_t ig_intr_md) {\n\n")
+            "    in psa_ingress_parser_input_metadata_t ig_intr_md,\n"
+            "    in empty_t resubmit_meta,\n"
+            "    in empty_t recirculate_meta) {\n\n")
 
         parser.write("    state start {\n"
                      "        transition parse_ethernet;\n"
@@ -72,7 +83,10 @@ def create_parser(fname, config):
 
         parser.write("control SwitchIngressDeparser(\n"
                      "    packet_out pkt,\n"
-                     "    inout header_t hdr,\n" 
+                     "    out empty_t clone_i2e_meta,\n"
+                     "    out empty_t resubmit_meta,\n"
+                     "    out empty_t normal_meta,\n"
+                     "    inout header_t hdr,\n"
                      "    in metadata_t meta,\n"
                      "    in psa_ingress_output_metadata_t ig_out_md) {\n"
                      "    apply {\n")
@@ -91,7 +105,10 @@ def create_parser(fname, config):
             "    packet_in pkt,\n"
             "    out header_t hdr,\n"
             "    inout metadata_t meta,\n"
-            "    in psa_egress_parser_input_metadata_t eg_intr_md) {\n")
+            "    in psa_egress_parser_input_metadata_t eg_intr_md,\n"
+            "    in empty_t normal_meta,\n"
+            "    in empty_t clone_i2e_meta,\n"
+            "    in empty_t clone_e2e_meta) {\n")
             # "    CommonParser() common_parser;\n")
 
         parser.write("    state start {\n"
@@ -107,6 +124,8 @@ def create_parser(fname, config):
 
         parser.write("control SwitchEgressDeparser(\n"
                      "    packet_out pkt,\n"
+                     "    out empty_t clone_e2e_meta,\n"
+                     "    out empty_t recirculate_meta,\n"
                      "    inout header_t hdr,\n"
                      "    in metadata_t eg_md,\n"
                      "    in psa_egress_output_metadata_t eg_dprsr_md,\n"
@@ -175,7 +194,7 @@ def create_egress_control(fname, config):
                      "control SwitchEgress(\n"
                      "    inout header_t hdr,\n"
                      "    inout metadata_t meta,\n"
-                     "    in psa_egress_parser_input_metadata_t eg_intr_md,"
+                     "    in psa_egress_input_metadata_t eg_intr_md,\n"
                      "    inout psa_egress_output_metadata_t eg_out_md) {\n\n")
 
         egress.write("    apply {\n"
@@ -220,6 +239,7 @@ def create_include(fname, config):
     with open(fname, 'a') as main:
         main.write("#include <core.p4>\n")
         main.write("#include <psa.p4>\n\n")
+        main.write("struct empty_t {}\n\n")
 
 ###################################################
 # Load the configuration from the config file
