@@ -28,7 +28,7 @@ $ dpkg-deb --fsys-tarfile esnet-smartnic1_1.0.0-13540_amd64.deb | tar tf - | tre
             │       ├── changelog.Debian.gz
             │       └── copyright
             └── esnet-smartnic
-                └── esnet-smartnic-top-ir.yaml   <------- PCIe register map definition used to directly read/write registers for debug using regio tool
+                └── esnet-smartnic-top-ir.yaml   <------- PCIe register map definition used to directly read/write registers for debug using region tool
 
 13 directories, 10 files
 

@@ -239,7 +239,7 @@ def test_tables(sklearn_test_y, test_X, test_y):
     width = Planter_config['p4 config']["width of inputs"]
     Exact_Table = json.load(open('Tables/Exact_Table.json', 'r'))
 
-    print('Test the exact feature table, extact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
+    print('Test the exact feature table, exact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
 
     correct = 0
     switch_test_y = []

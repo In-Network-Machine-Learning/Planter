@@ -26,7 +26,7 @@ SRC_LIST_FILES =
 #   (see $SCRIPTS_ROOT/Makefiles/dependencies.mk)
 # ----------------------------------------------------
 COMPONENTS = \
-			 p4_and_verilog.regio.verif \
+			 p4_and_verilog.region.verif \
              std.verif@common@smartnic \
              axi4l.verif@common@smartnic \
              axi4s.verif@common@smartnic

@@ -2,7 +2,7 @@ name: smartnic_322mhz_app
 
 decoders:
   p4_app_decoder: &p4_app_decoder
-    !include ../src/p4_app/regio/p4_app_decoder.yaml
+    !include ../src/p4_app/region/p4_app_decoder.yaml
 
 interfaces:
   - decoder: *p4_app_decoder

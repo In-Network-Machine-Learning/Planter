@@ -199,7 +199,7 @@ static void print_qdma_status(volatile struct qdma_function_block * qdma)
     // Print a row of values
     printf("\t\t0x%02x\t", row * 16);
     for (unsigned int col=0; col < 16; col++) {
-      // Print the colums for this row
+      // Print the columns for this row
       uint32_t qid = qdma->indir_table[row * 16 + col];
       printf("%5u ", qid & 0x0000FFFF);
     }

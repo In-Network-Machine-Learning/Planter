@@ -25,7 +25,7 @@ SRC_LIST_FILES =
 #   List IP component and external library dependencies
 #   (see $SCRIPTS_ROOT/Makefiles/dependencies.mk)
 # ----------------------------------------------------
-COMPONENTS = p2p.regio.rtl \
+COMPONENTS = p2p.region.rtl \
              util.rtl@common@smartnic \
              axi4l.rtl@common@smartnic \
              axi4s.rtl@common@smartnic

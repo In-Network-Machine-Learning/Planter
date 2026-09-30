@@ -124,7 +124,7 @@ module p4_hbm_datapath_unit_test;
 	
         string filename;
 
-        // variabes for reading expected pcap data
+        // variables for reading expected pcap data
         byte                      exp_data[$][$];
         pcap_pkg::pcap_hdr_t      exp_pcap_hdr;
         pcap_pkg::pcaprec_hdr_t   exp_pcap_record_hdr[$];
@@ -176,7 +176,7 @@ module p4_hbm_datapath_unit_test;
                  while (rx_pkt_cnt < exp_pcap_record_hdr.size() || ($time < t + 5us)) begin
                      fork
                          begin
-                             // Always monitor for some minumum period, even if no receive packets are expected
+                             // Always monitor for some minimum period, even if no receive packets are expected
                              #5us;
                          end
                          begin

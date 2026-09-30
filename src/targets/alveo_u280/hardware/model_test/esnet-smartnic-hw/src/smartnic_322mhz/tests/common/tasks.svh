@@ -169,7 +169,7 @@ task automatic run_pkt_stream (
        input bit              tuser = 0
     );
    
-    // variabes for reading pcap data$
+    // variables for reading pcap data$
     byte                      pcap_data[$][$];
     pcap_pkg::pcap_hdr_t      pcap_hdr;
     pcap_pkg::pcaprec_hdr_t   pcap_record_hdr[$];

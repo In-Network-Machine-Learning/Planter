@@ -29,7 +29,7 @@ regmap_c_headers = custom_target(
     regio_generate_prog,
     '--file-type', 'top',
     '--recursive',
-    '--template-dir', '@SOURCE_ROOT@/regio/templates',
+    '--template-dir', '@SOURCE_ROOT@/region/templates',
     '--generator', 'c',
     '--output-dir', '@OUTDIR@',
     '@INPUT@'

@@ -15,7 +15,7 @@ regs:
     access: rw
     fields:
       - name: enable
-        desc: set to 1 to enable rss_config register (activates register ovveride).
+        desc: set to 1 to enable rss_config register (activates register override).
         width: 1
         init : 0
       - name: rss_enable
