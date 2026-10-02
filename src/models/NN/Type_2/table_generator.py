@@ -21,7 +21,7 @@ import os
 
 # %matplotlib inline
 import matplotlib.pyplot as plt
-plt.style.use('seaborn')
+plt.style.use('seaborn-v0_8')
 
 import seaborn as sns
 sns.set_style("whitegrid")
