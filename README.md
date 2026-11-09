@@ -1,7 +1,30 @@
+
 # Planter
 ![Planter Logo](src/images/logo.png)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![GitHub release](https://img.shields.io/badge/release%20tag-v0.1.0-orange)
+
+## Update: PlanPi (2026)
+
+🚀 **PlanPi: In-Network Machine Learning via p4c-dpdk**
+
+PlanPi extends Planter to resource-constrained edge devices by integrating the framework with the **P4Pi platform and the p4c-dpdk backend**. It enables machine learning inference directly within DPDK SWX pipelines on Raspberry Pi devices.
+
+The main updates include:
+
+- **DPDK Target Support:** Automatic generation, compilation, and deployment of P4-based ML models through `p4c-dpdk`.
+- **Raspberry Pi Integration:** Deployment of in-network ML on Raspberry Pi 5 using the P4Pi platform.
+- **ML Model Support:** End-to-end deployment and validation of Decision Tree and Random Forest classifiers.
+- **Performance Improvements:** Up to **22.1× higher lossless packet rate** compared with BMv2, while maintaining comparable classification accuracy.
+- **Practical Applications:** Example workflows for traffic classification and network anomaly detection.
+
+PlanPi was developed through **Google Summer of Code (GSoC) 2026**, under the P4 Language Consortium, and is presented in **EuroP4 2026**.
+
+**Resources:**
+- [PlanPi GitHub Repository](https://github.com/ox-computing/PlanPi)
+- [PlanPi Paper (EuroP4 2026)](https://ora.ox.ac.uk/objects/uuid:f90dd9fe-d7b9-423f-b7b8-6624fcf594e4)
+- [GSoC 2026 Project Report](https://p4lang.github.io/gsoc/blog/posts/2026-08-24-p4pi/)
+
 
 ## Introducing Planter
 Planter is a modular framework for realizing one-click in-network machine learning algorithms. All you need to provide to Planter is a configuration file (```Name_data.py```) and a dataset. Planter will take it from there and offload your machine learning classification task into a programmable data plane. This is the artifact for the paper "[Planter: Rapid Prototyping of In-Network Machine Learning Inference](https://eng.ox.ac.uk/media/zetja3ek/zheng24planter.pdf)" in SIGCOMM CCR [[video]](https://www.youtube.com/watch?v=ZVXNpUwgSi0) (with an early arXiv version named "[Automating In-Network Machine Learning](https://arxiv.org/pdf/2205.08824.pdf)".) 
