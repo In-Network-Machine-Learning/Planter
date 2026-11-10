@@ -28,3 +28,10 @@ Targets refer to the hardware or software programmable targets, running a suppor
 **6. P4Pi (BMv2)** [Folder](../../targets/bmv2)
 
 **7. NVIDIA BlueField2** [Folder](../../targets/bmv2)
+
+**8. DPDK Software (p4c-dpdk)** [Folder](../../targets/dpdk) -
+A software P4 target supporting in-network ML inference through
+the p4c-dpdk compiler and DPDK SWX pipelines, including Raspberry Pi 5.
+
+- **How to use?** See the
+  [DPDK target README](../../targets/dpdk/readme.md).
