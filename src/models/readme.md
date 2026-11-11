@@ -1,1 +1,1 @@
-This folder contains Planter-supported ML modules (training, algortihm mapping, and ML-related P4 generation). Please refer to ```./Docs/Planter_User_Document.pdf```for further information.
+This folder contains Planter-supported ML modules (training, algorithm mapping, and ML-related P4 generation). Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

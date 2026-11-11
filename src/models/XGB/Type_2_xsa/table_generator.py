@@ -124,11 +124,11 @@ def generate_feature_tables(split, num_features,feature_max, table):
     for i in range(num_features):
         table["feature "+str(i)] = {}
         count_code = 0
-        nife = sorted(split["feature "+str(i)])
+        knife = sorted(split["feature "+str(i)])
         for j in range(feature_max[i]+1):
-            if nife !=[] :
-                if len(nife) > count_code:
-                    if j == nife[count_code]:
+            if knife !=[] :
+                if len(knife) > count_code:
+                    if j == knife[count_code]:
                         count_code+=1
             table["feature " + str(i)][j] = count_code
     return table
@@ -459,7 +459,7 @@ def test_tables(sklearn_test_y, test_X, test_y):
     Exact_Table = json.load(open('Tables/Exact_Table.json', 'r'))
 
 
-    print('Test the exact feature table, extact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
+    print('Test the exact feature table, exact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
     same = 0
     correct = 0
     error = 0

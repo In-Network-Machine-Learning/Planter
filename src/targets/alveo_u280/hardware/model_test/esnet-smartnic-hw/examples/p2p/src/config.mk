@@ -39,5 +39,5 @@ LIB_DESC := "RTL and verification for P2P SmartNIC application"
 #
 LIBRARIES = smartnic=$(SMARTNIC_ROOT)/src
 
-# Specify name of 'common' library (for autogenerating register infrastructure from regio specifications)
+# Specify name of 'common' library (for autogenerating register infrastructure from region specifications)
 COMMON_LIB_NAME = common@smartnic

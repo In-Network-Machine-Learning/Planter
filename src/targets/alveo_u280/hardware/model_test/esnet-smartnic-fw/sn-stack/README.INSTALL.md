@@ -69,7 +69,7 @@ The firmware runtime environment exists inside of the `smartnic-fw` container.  
 ```
 docker compose exec smartnic-fw bash
 sn-cli dev version
-regio syscfg
+region syscfg
 ```
 
 Using the sn-cli tool
@@ -82,7 +82,7 @@ All commands described below are expected to be executed within the `smartnic-fw
 docker compose exec smartnic-fw bash
 ```
 
-The `sn-cli` tool will automatically look for an environment variable called `SN_CLI_SLOTADDR` which can be set to the PCIe BDF address of the device that you would like to interract with.  In the `smartnic-fw` container, this value will already be set for you.
+The `sn-cli` tool will automatically look for an environment variable called `SN_CLI_SLOTADDR` which can be set to the PCIe BDF address of the device that you would like to interact with.  In the `smartnic-fw` container, this value will already be set for you.
 
 # Displaying device information with the "dev" subcommand
 
@@ -321,7 +321,7 @@ Where:
   * Some actions require zero parameters.  In this case, omit the optional `--param` option entirely.
 * `<prio-val>` is the priority to be used to resolve scenarios where multiple matches could occur
   * The `--priority` option is *required* for tables with CAM/TCAM type matches (prefix/range/ternary)
-  * The `--priority` option is *prohibited* for tables without CAM/TCAM type mathes
+  * The `--priority` option is *prohibited* for tables without CAM/TCAM type matches
 
 **NOTE**: You can find details about your pipeline structure and valid names by running the `info` subcommand.
 

@@ -10,7 +10,7 @@ blocks:
 
 decoders:
   smartnic_322mhz_app_decoder: &smartnic_322mhz_app_decoder
-    !include ../src/smartnic_322mhz/regio/smartnic_322mhz_app_decoder.yaml
+    !include ../src/smartnic_322mhz/region/smartnic_322mhz_app_decoder.yaml
 
 interfaces:
   - decoder: *smartnic_322mhz_app_decoder

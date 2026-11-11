@@ -76,7 +76,7 @@ module smartnic_322mhz_reset #(
 
 
  // core clock domain resets are generated from the locally generated AXI-lite reset
- // core clock domain is asynnchronous wrt. CMAC domains, and is derived from AXI-lite via a PLL
+ // core clock domain is asynchronous wrt. CMAC domains, and is derived from AXI-lite via a PLL
    
   xpm_cdc_async_rst #(
     .DEST_SYNC_FF    (2),

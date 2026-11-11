@@ -2,23 +2,23 @@ name: smartnic_322mhz
 
 blocks:
   smartnic_322mhz: &smartnic_322mhz
-    !include ../src/smartnic_322mhz/regio/smartnic_322mhz.yaml
+    !include ../src/smartnic_322mhz/region/smartnic_322mhz.yaml
   reg_endian_check: &reg_endian_check
-    !include src/reg/endian/regio/reg_endian_check.yaml
+    !include src/reg/endian/region/reg_endian_check.yaml
   axi4s_probe: &axi4s_probe
-    !include src/axi4s/regio/axi4s_probe.yaml 
+    !include src/axi4s/region/axi4s_probe.yaml 
 
 decoders:
   smartnic_322mhz_app_decoder: &smartnic_322mhz_app_decoder
-    !include ../src/smartnic_322mhz/regio/smartnic_322mhz_app_sdnet_decoder.yaml
+    !include ../src/smartnic_322mhz/region/smartnic_322mhz_app_sdnet_decoder.yaml
   fifo: &fifo
-    !include src/fifo/regio/fifo_core_decoder.yaml
+    !include src/fifo/region/fifo_core_decoder.yaml
   axi4s_split_join_decoder: &axi4s_split_join_decoder
-    !include src/axi4s/regio/axi4s_split_join_decoder.yaml
+    !include src/axi4s/region/axi4s_split_join_decoder.yaml
   xilinx_hbm_0: &xilinx_hbm_0
-    !include ../src/smartnic_322mhz/regio/xilinx_hbm_0_decoder.yaml
+    !include ../src/smartnic_322mhz/region/xilinx_hbm_0_decoder.yaml
   xilinx_hbm_1: &xilinx_hbm_1
-    !include ../src/smartnic_322mhz/regio/xilinx_hbm_1_decoder.yaml
+    !include ../src/smartnic_322mhz/region/xilinx_hbm_1_decoder.yaml
 
 interfaces:
   - block: *smartnic_322mhz

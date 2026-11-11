@@ -2,9 +2,9 @@ name: xilinx_hbm_0
 
 blocks:
   xilinx_hbm: &xilinx_hbm
-    !include src/xilinx/hbm/regio/xilinx_hbm.yaml
+    !include src/xilinx/hbm/region/xilinx_hbm.yaml
   proxy_reg: &proxy_reg
-    !include src/reg/proxy/regio/reg_proxy.yaml
+    !include src/reg/proxy/region/reg_proxy.yaml
 
 interfaces:
   - block: *xilinx_hbm

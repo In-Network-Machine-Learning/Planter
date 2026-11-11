@@ -11,7 +11,7 @@ class LoaderMeta(type):
     """Constructor for supporting `!include`.
     """
     def __new__(mcs, __name__, __bases__, __dict__):
-        """Add include constructer to class."""
+        """Add include constructor to class."""
         # register the include constructor on the class
         cls = super().__new__(mcs, __name__, __bases__, __dict__)
         cls.add_constructor('!include', cls.construct_include)

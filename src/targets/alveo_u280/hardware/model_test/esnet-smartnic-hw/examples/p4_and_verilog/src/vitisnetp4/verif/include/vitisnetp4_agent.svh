@@ -175,7 +175,7 @@ class vitisnetp4_agent #(
                end
 
                RST_STATE : begin
-                   if (VERBOSE) $display("** Info: Reseting VitisNet IP instance to default state");
+                   if (VERBOSE) $display("** Info: Resetting VitisNet IP instance to default state");
                    sdnet_0_pkg::reset_state(CtxPtr);
                end
 

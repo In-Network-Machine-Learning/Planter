@@ -116,7 +116,7 @@ def common_headers(fname, config):
 
         headers.write("header extractData_h {\n"
                       "    bit < 32 > data; \n"
-                      # "    bit < 8 > seperator;\n"
+                      # "    bit < 8 > separator;\n"
                       "}\n")
 
         headers.write("header result_h {\n"

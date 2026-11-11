@@ -32,7 +32,7 @@ props = {}
 try:
     for compInst in root.find('spirit:componentInstances', ns).findall('spirit:componentInstance', ns):
         compRef = compInst.find('spirit:componentRef', ns)
-        # Check that source file decribes a VitisNet component
+        # Check that source file describes a VitisNet component
         compRefName = compRef.get('{' + ns['spirit'] + '}name')
         if (compRefName == 'vitis_net_p4'):
             # Retrieve config info

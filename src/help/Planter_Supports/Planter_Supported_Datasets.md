@@ -16,7 +16,7 @@ Planter currently supports 7 datasets.
 
 **4. AWID3** [Link](https://icsdweb.aegean.gr/awid/awid3) - The AWID3 dataset is a network intrusion detection dataset with 13 different attacks. The data is collected from 16 different physical devices and VMs.
 
-**5. Requet** [Link](https://github.com/Wimnet/RequetDataSet) - Requet is a Quality of Experience (QoE) metric detection dataset collected from video streaming services to give the records of video playback information.
+**5. Request** [Link](https://github.com/Wimnet/RequetDataSet) - Request is a Quality of Experience (QoE) metric detection dataset collected from video streaming services to give the records of video playback information.
 
 **6. Jane Street Market** [Link](https://www.kaggle.com/c/jane-street-market-prediction) - Jane Street Markets is a high-frequency trading dataset with 500 days of historical data. Specifically, it contains 130 features.
 

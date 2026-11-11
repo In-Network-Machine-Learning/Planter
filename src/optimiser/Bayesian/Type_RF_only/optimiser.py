@@ -56,7 +56,7 @@ def write_config():
     Planter_config["test config"]["baseline model"] = "None"
     Planter_config["test config"]["port"] = "veth7"
     Planter_config["test config"]["sudo password"] = "12345"
-    Planter_config["directory config"]["sde-tools existance"] = "y"
+    Planter_config["directory config"]["sde-tools existence"] = "y"
     Planter_config["directory config"]["sde-tools config file name"] = "Directory_config.json"
 
     # dump the planter config

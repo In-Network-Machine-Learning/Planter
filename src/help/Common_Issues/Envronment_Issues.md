@@ -25,7 +25,7 @@
 
 If it turns out that some packages were not installed (even though you have set up the environment based on ```requirements.txt```), install the missing packages manually.
 
-💡 To set up Planter on P4Pi-enabled BMv2, follow the wiki page in [this link](./src/help/Throughput_Test/Planter_throughput_test_P4Pi-BMv2.md).
+💡 To set up Planter on P4Pi-enabled BMv2, follow the wiki page in [this link](../Throughput_Test/Planter_throughput_test_P4Pi-BMv2.md).
 
 
 ## Common Running Issues:

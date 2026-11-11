@@ -228,7 +228,7 @@ def get_lineage(tree, feature_names, file):
             else:
                 sign = g
             clause = clause + i[3] + sign + str(i[2]) + ' and '
-        # wirte the node information into text file
+        # write the node information into text file
         a = list(value[node][0])
         ind = a.index(np.max(a))
         clause = clause[:-4] + ' then ' + str(ind)

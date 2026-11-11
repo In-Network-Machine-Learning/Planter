@@ -152,7 +152,7 @@ module p4_app_datapath_unit_test;
 	
         string filename;
 
-        // variabes for reading expected pcap data
+        // variables for reading expected pcap data
         byte                      exp_data[$][$];
         pcap_pkg::pcap_hdr_t      exp_pcap_hdr;
         pcap_pkg::pcaprec_hdr_t   exp_pcap_record_hdr[$];

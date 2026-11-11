@@ -86,7 +86,7 @@ The platform includes the following repositories:
      verification. SVunit is used by the SmartNIC platform, but is
      neither maintained nor distributed by ESnet.
 
-   - `ESnet Regio` (https://github.com/esnet/regio.git)
+   - `ESnet Region` (https://github.com/esnet/region.git)
      Automation tools for the implementation of FPGA register map logic and software code.
 
 
@@ -97,7 +97,7 @@ depicted below:
 esnet-smartnic-hw/ (parent repository)
 ├── esnet-fpga-library/ (submodule)
 │   └── tools/
-│       ├── regio/ (submodule)
+│       ├── region/ (submodule)
 │       └── svunit/ (submodule)
 └── open-nic-shell/ (submodule)
 
@@ -137,7 +137,7 @@ esnet-fpga-library/
   This library contains general-purpose FPGA design content.
 
 examples/
-  Contains SmartNIC application design exaples.  A new application directory can be started
+  Contains SmartNIC application design examples.  A new application directory can be started
   by copying one of the provided example directories, or by modeling portions of the example
   directory structure.
 
@@ -183,7 +183,7 @@ The following steps guide a new user through the installation of the
 SmartNIC Hardware Design Repository, beginning with a
 suitably-configured host running Ubuntu 20.04 LTS Linux.
 
-1. Install the esnet-smartnic-hw respository by creating a clone from github into a local directory:
+1. Install the esnet-smartnic-hw repository by creating a clone from github into a local directory:
 
        > git clone https://github.com/esnet/esnet-smartnic-hw.git
 
@@ -194,13 +194,13 @@ suitably-configured host running Ubuntu 20.04 LTS Linux.
        > git submodule update --init --recursive
 
 
-3. Install the prerequisites required to run the esnet regio tools:
+3. Install the prerequisites required to run the esnet region tools:
 
        > sudo apt install python3-yaml python3-jinja2 python3-click
-       > pip3 install -r esnet-fpga-library/tools/regio/requirements.txt
+       > pip3 install -r esnet-fpga-library/tools/region/requirements.txt
 
-   Note: The above instructions and more details about the `regio` tools can be found in the README file
-   at: `esnet-fpga-library/tools/regio/README.md`
+   Note: The above instructions and more details about the `region` tools can be found in the README file
+   at: `esnet-fpga-library/tools/region/README.md`
 
 
 ### Installing and Configuring the Vivado Runtime Environment
@@ -258,9 +258,9 @@ From the esnet-smartnic-hw directory:
 The following steps can be taken by a new user to setup a local application design directory for building
 the bitfile and artifacts for a custom P4-based SmartNIC application.
 
-1. Install the esnet-smartnic-hw respository (as described above).
+1. Install the esnet-smartnic-hw repository (as described above).
 
-   Or, alternatively, add the esnet-smartnic-hw respository to an existing git repository as a sub-module:
+   Or, alternatively, add the esnet-smartnic-hw repository to an existing git repository as a sub-module:
 
        > git submodule add https://github.com/esnet/esnet-smartnic-hw.git
 
@@ -380,7 +380,7 @@ Support for these features may be added in a future release.
 ### Reference Documents:
 
 The following reference documents can be accessed from the AMD (Xilinx) Vitis Networking P4 Secure Site
-(once access priveleges are approved and granted):
+(once access privileges are approved and granted):
 
 - *Vitis Networking P4 Installation Guide and Release Notes, UG1307 (v2021.2 Early Access) January 4, 2022.*
 

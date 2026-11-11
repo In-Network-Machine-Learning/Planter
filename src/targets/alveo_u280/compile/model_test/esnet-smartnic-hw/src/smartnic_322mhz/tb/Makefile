@@ -24,13 +24,13 @@ SRC_LIST_FILES =
 # ----------------------------------------------------
 COMPONENTS = smartnic_322mhz.rtl \
              smartnic_322mhz.xilinx_ip \
-             smartnic_322mhz.regio.verif \
+             smartnic_322mhz.region.verif \
              std.rtl@common \
              std.verif@common \
-             reg.endian.regio.verif@common \
+             reg.endian.region.verif@common \
              axi4l.verif@common \
              axi4s.verif@common \
-             axi4s.regio.verif@common \
+             axi4s.region.verif@common \
              xilinx.hbm.verif@common
 
 EXT_LIBS =
