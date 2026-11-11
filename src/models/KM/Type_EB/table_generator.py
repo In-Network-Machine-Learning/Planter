@@ -204,7 +204,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
         feature_names += ["f" + str(i)]
     feature_max = []
     for i in feature_names:
-        t_t = [test_X[[i]].max()[0], train_X[[i]].max()[0]]
+        t_t = [test_X[[i]].max().iloc[0], train_X[[i]].max().iloc[0]]
         feature_max += [np.max(t_t) + 1]
     # print(feature_max)
 

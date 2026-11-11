@@ -19,7 +19,7 @@ import os
 
 # %matplotlib inline
 import matplotlib.pyplot as plt
-plt.style.use('seaborn')
+plt.style.use('seaborn-v0_8')
 
 import seaborn as sns
 sns.set_style("whitegrid")
@@ -234,7 +234,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
 
     feature_max = []
     for i in feature_names:
-        t_t = [test_X[[i]].max()[0], train_X[[i]].max()[0]]
+        t_t = [test_X[[i]].max().iloc[0], train_X[[i]].max().iloc[0]]
         feature_max += [np.max(t_t)+1]
 
     # =================== train model timer ===================

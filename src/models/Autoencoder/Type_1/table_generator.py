@@ -77,7 +77,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
 
     feature_max = []
     for i in feature_names:
-        t_t = [test_X[[i]].max()[0], train_X[[i]].max()[0]]
+        t_t = [test_X[[i]].max().iloc[0], train_X[[i]].max().iloc[0]]
         feature_max += [max(t_t)+1]
      ###### Normalize the input as the autoencoder only uses the input
     # MMScaler = MinMaxScaler()
